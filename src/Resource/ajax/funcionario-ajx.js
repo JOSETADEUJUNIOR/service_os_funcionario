@@ -1,5 +1,5 @@
 function CarregarMeusDados() {
-
+//alert(BASE_URL_AJAX("funcionario_api"));
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id){
         Sair();
@@ -13,10 +13,10 @@ function CarregarMeusDados() {
     }
     $.ajax({
         type: "POST",
-        url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
+        url:BASE_URL_AJAX("funcionario_api"),
         data: JSON.stringify(dados),
         headers: {
-            'Authorization': 'Bearer' + GetTnk(),
+            'Authorization': 'Bearer ' + GetTnk(),
             'Content-Type': 'application/json'
         },
         success: function (dados_ret) {
@@ -36,6 +36,7 @@ function CarregarMeusDados() {
 }
 
 function ValidarAcesso(id_form) {
+    alert('asdsad');
     if (NotificarCampos(id_form)) {
         var dados = {
             email: $("#login").val(),
@@ -45,7 +46,8 @@ function ValidarAcesso(id_form) {
         }
         $.ajax({
             type: "POST",
-            url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
+            //url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
+            url:BASE_URL_AJAX("funcionario_api"),
             data: JSON.stringify(dados),
             headers: {
                 
@@ -106,7 +108,7 @@ function AlterarMeusDados(id_form) {
         $.ajax({
 
             type: "POST",
-            url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
+            url:BASE_URL_AJAX("funcionario_api"),
             data: JSON.stringify(dados),
             headers: {
                 'Authorization': 'Bearer' + GetTnk(),
@@ -142,7 +144,7 @@ function CarregarEquipamentoAlocado() {
     }
     $.ajax({
         type: "POST",
-        url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
+        url:BASE_URL_AJAX("funcionario_api"),
         data: JSON.stringify(dados),
         headers: {
             'Content-Type': 'application/json'
@@ -179,7 +181,7 @@ function AbrirChamado(id_form) {
         $.ajax({
             type: "POST",
             // url: BASE_URL_AJAX("funcionario_api"),
-            url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
+            url:BASE_URL_AJAX("funcionario_api"),
             data: JSON.stringify(dados),
             headers: {
                 'Authorization': 'Bearer ' + GetTnk(),
@@ -285,7 +287,7 @@ function CarregarMeusDadosd() {
     $.ajax({
         type: "POST",
         // url: BASE_URL_AJAX("funcionario_api"),
-        url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
+        url:BASE_URL_AJAX("funcionario_api"),
         data: JSON.stringify(dados),
         headers: {
             'Content-Type': 'application/json'
@@ -300,7 +302,7 @@ function CarregarMeusDadosd() {
                 var table_end = '';
                 var table_data = '';
 
-                var table_start = '<table class="table table-hover" id="dynamic-table"><thead>';
+                var table_start = '<div class="table-responsive"><table width="100%" class="table table-hover" id="dynamic-table" style="max-width:600px;"><thead>';
                 var table_head = ' <tr><th>Nome</th>\n' +
                     ' <th>Email</th>\n' +
                     ' <th>Telefone</th>\n' +
@@ -316,7 +318,7 @@ function CarregarMeusDadosd() {
 
 
                 })
-                table_end = '</tbody></table>';
+                table_end = '</tbody></table></div>';
 
                 var vaso = table_start + table_head + table_data + table_end;
 
@@ -347,7 +349,7 @@ function VerificarSenhaAtual(id_form) {
         $.ajax({
             type: "POST",
             // url: BASE_URL_AJAX("funcionario_api"),
-            url: "http://localhost/syscompra/src/Resource/api/funcionario_api.php",
+            url:BASE_URL_AJAX("funcionario_api"),
             data: JSON.stringify(dados),
             headers: {
                 'Authorization':'Bearer ' + GetTnk(),
@@ -391,8 +393,7 @@ function AtualizarSenha() {
     };
     $.ajax({
         type: "POST",
-        // url: BASE_URL_AJAX("funcionario_api"),
-        url: "http://localhost/syscompra/src/Resource/api/funcionario_api.php",
+        url:BASE_URL_AJAX("funcionario_api"),
         data: JSON.stringify(dados),
         headers: {
             'Authorization': 'Bearer ' + GetTnk(),

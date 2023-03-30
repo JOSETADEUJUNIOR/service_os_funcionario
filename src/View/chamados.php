@@ -73,8 +73,8 @@
 											<span class="lbl"> Encerrados</span>
 										</label>
 									</div>
-									<div id="dynamic-table">
-										<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+									<div class="table-responsive" id="dynamic-table">
+										<table id="dynamic-table" class="table table-striped table-bordered table-hover" style="max-width:600px;">
 
 										</table>
 									</div>

@@ -91,10 +91,14 @@ function CarregarModalStatus(id, nome, status_atual) {
     $("#nome_user_status").html(nome);
     $("#status_atual").val(status_atual);
 }
-
+//usar para localhost
 function BASE_URL_AJAX($file_ajax) {
-    return "http://localhost/syscompra/src/Resource/api/" + $file_ajax + ".php";
+    return "http://localhost/service_os/src/Resource/api/" + $file_ajax + ".php";
 }
+//usar para acesso em produção.
+/* function BASE_URL_AJAX($file_ajax) {
+    return "https://siteparaseunegocio.com/service_os/src/Resource/api/" + $file_ajax + ".php";
+} */
 function EscolherUsuario(tipo) {
     alert(tipo);
 

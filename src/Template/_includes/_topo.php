@@ -13,13 +13,13 @@
 		<div class="navbar-header pull-left">
 			<a href="index.php" class="navbar-brand">
 				<small>
-					<i class="fa fa-leaf"></i>
-					Aqui vai o nome do Site
+					<i class="fa fa-users"></i>
+					JRA - Service OS
 				</small>
 			</a>
 		</div>
 
-		<div class="navbar-buttons navbar-header pull-right" role="navigation">
+		<!-- <div class="navbar-buttons navbar-header pull-right" role="navigation">
 			<ul class="nav ace-nav">
 
 
@@ -191,6 +191,6 @@
 
 
 			</ul>
-		</div>
+		</div> -->
 	</div><!-- /.navbar-container -->
 </div>
