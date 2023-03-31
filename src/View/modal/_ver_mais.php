@@ -7,31 +7,31 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-12">
                         <div class="form-group">
                             <label>Data de atendimento</label>
                             <input class="form-control obg" readonly id="dt_atendimento">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-12">
                         <div class="form-group">
                             <label>Data de encerramento</label>
                             <input class="form-control obg" readonly id="dt_encerramento">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-12">
                         <div class="form-group">
                             <label>Tecnico que atendeu</label>
                             <input class="form-control obg" readonly id="tec_atendimento">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-12">
                         <div class="form-group">
                             <label>Tecnico que encerrou</label>
                             <input class="form-control obg" readonly id="tec_encerramento">
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 col-xs-12">
                         <div class="form-group">
                             <label>Laudo</label>
                             <textarea class="form-control obg" readonly id="laudo"></textarea>

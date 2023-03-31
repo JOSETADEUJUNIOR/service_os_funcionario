@@ -78,6 +78,9 @@
 
 										</table>
 									</div>
+									<?php
+									include_once 'modal/_ver_mais.php';
+									?>
 								</div>
 							</div><!-- /.col -->
 						</div><!-- /.row -->

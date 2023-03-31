@@ -59,7 +59,7 @@
     margin-bottom: 5px;
   }
   .login-layout{
-    background: url('../Template/assets/images/fundo.jpg');
+    background: #203D52;
   }
 </style>
 

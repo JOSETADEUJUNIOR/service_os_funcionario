@@ -36,7 +36,6 @@ function CarregarMeusDados() {
 }
 
 function ValidarAcesso(id_form) {
-    alert('asdsad');
     if (NotificarCampos(id_form)) {
         var dados = {
             email: $("#login").val(),
@@ -111,7 +110,7 @@ function AlterarMeusDados(id_form) {
             url:BASE_URL_AJAX("funcionario_api"),
             data: JSON.stringify(dados),
             headers: {
-                'Authorization': 'Bearer' + GetTnk(),
+                'Authorization': 'Bearer ' + GetTnk(),
                 'Content-Type': 'application/json'
             },
             success: function (dados_ret) {
@@ -147,6 +146,7 @@ function CarregarEquipamentoAlocado() {
         url:BASE_URL_AJAX("funcionario_api"),
         data: JSON.stringify(dados),
         headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
             'Content-Type': 'application/json'
         },
         success: function (dados_ret) {
@@ -221,8 +221,8 @@ function FiltrarChamado(situacao = 4) {
     };
     $.ajax({
         type: "POST",
-        // url: BASE_URL_AJAX("funcionario_api"),
-        url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
+        url:BASE_URL_AJAX("funcionario_api"),
+       // url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
         data: JSON.stringify(dados),
         headers: {
             'Authorization': 'Bearer ' + GetTnk(),
@@ -237,25 +237,28 @@ function FiltrarChamado(situacao = 4) {
 
                 var table_start = '<table class="table table-hover" id="dynamic-table"><thead>';
                 var table_head = ' <tr><th>Data Abertura</th>\n' +
+                    '<th></th>\n' +
                     ' <th>Funcionário</th>\n' +
                     ' <th>Equipamento</th>\n' +
                     ' <th>Problema</th>\n' +
-                    ' <th>Data Atendimento</th>\n' +
+                    /* ' <th>Data Atendimento</th>\n' +
                     ' <th>Técnico</th>\n' +
                     ' <th>Data Encerramento</th>\n' +
-                    ' <th>Laudo</th>\n' +
+                    ' <th>Laudo</th>\n' + */
                     ' </tr></thead>';
 
                 $(resultado).each(function () {
                     table_data += '<tr>';
+                    table_data += '<td>';
+                    table_data += '<button type="button" class="btn btn-block btn-primary btn-sm" onclick="ModalMais(' + "'" + this.data_atendimento + "'" + ', ' + "'" + (this.data_encerramento != null ? this.data_encerramento : '') + "'" + ', ' + "'" + this.nome_tecnico + "'" + ', ' + "'" + (this.tecnico_encerramento != null ? this.tecnico_encerramento : '') + "'" + ',' + "'" + (this.laudo_tecnico != null ? this.laudo_tecnico : 'sem laudo') + "'" + ')" data-toggle="modal" data-target="#verMais">ver mais</button>';
                     table_data += '<td>' + this.data_abertura + '</td>';
                     table_data += '<td>' + this.nome_funcionario + '</td>';
                     table_data += '<td>' + this.identificacao + ' / ' + "Modelo: " + this.nome_modelo + ' / ' + this.nome_tipo + '</td>';
                     table_data += '<td>' + this.descricao_problema + '</td>';
-                    table_data += '<td>' + (this.data_atendimento != null ? this.data_atendimento : '') + '</td>';
+                   /*  table_data += '<td>' + (this.data_atendimento != null ? this.data_atendimento : '') + '</td>';
                     table_data += '<td>' + (this.nome_tecnico != null ? this.nome_tecnico : '') + '</td>';
                     table_data += '<td>' + (this.data_encerramento != null ? this.data_encerramento : '') + '</td>';
-                    table_data += '<td>' + (this.laudo_tecnico != null ? this.laudo_tecnico : '') + '</td>';
+                    table_data += '<td>' + (this.laudo_tecnico != null ? this.laudo_tecnico : '') + '</td>'; */
 
                 })
                 table_end = '</tbody></table>';
@@ -290,6 +293,7 @@ function CarregarMeusDadosd() {
         url:BASE_URL_AJAX("funcionario_api"),
         data: JSON.stringify(dados),
         headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
             'Content-Type': 'application/json'
         },
         success: function (dados_ret) {
@@ -304,6 +308,7 @@ function CarregarMeusDadosd() {
 
                 var table_start = '<div class="table-responsive"><table width="100%" class="table table-hover" id="dynamic-table" style="max-width:600px;"><thead>';
                 var table_head = ' <tr><th>Nome</th>\n' +
+                   
                     ' <th>Email</th>\n' +
                     ' <th>Telefone</th>\n' +
                     ' <th>Rua</th>\n' +
@@ -311,6 +316,8 @@ function CarregarMeusDadosd() {
 
                 $(resultado).each(function () {
                     table_data += '<tr>';
+                   
+                   
                     table_data += '<td>' + this.nome + '</td>';
                     table_data += '<td>' + this.login + '</td>';
                     table_data += '<td>' + this.telefone + '</td>';

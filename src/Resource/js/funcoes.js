@@ -1,3 +1,5 @@
+const URL_API = window.PATH_URL = document.location.origin + '/service_os/src/Resource/api/';
+
 function load() {
     $("#divload").addClass("overlay").html('<i class="fas fa-2x fa-sync-alt fa-spin"> </i>');
 }
@@ -93,12 +95,8 @@ function CarregarModalStatus(id, nome, status_atual) {
 }
 //usar para localhost
 function BASE_URL_AJAX($file_ajax) {
-    return "http://localhost/service_os/src/Resource/api/" + $file_ajax + ".php";
+    return URL_API + $file_ajax + ".php";
 }
-//usar para acesso em produção.
-/* function BASE_URL_AJAX($file_ajax) {
-    return "https://siteparaseunegocio.com/service_os/src/Resource/api/" + $file_ajax + ".php";
-} */
 function EscolherUsuario(tipo) {
     alert(tipo);
 
@@ -175,4 +173,17 @@ function Sair() {
 function CarregarAtendimentoModal(id, equipamento) {
     $("#id_chamado").val(id);
     $("#equipamento_atender").html(equipamento);
+}
+function ModalMais(data_atendimento, data_encerramento = "", tec_atendimento = "", tec_encerramento = "", laudotec) {
+
+    $("#dt_atendimento").val(data_atendimento);
+    $("#dt_encerramento").val(data_encerramento);
+    $("#tec_atendimento").val(tec_atendimento);
+    $("#tec_encerramento").val(tec_encerramento);
+    if (laudotec != null) {
+        $("#laudo").val(laudotec);
+    } else if (laudotec = null) {
+        console.log('não tem');
+        $("#laudo").val("não há dados");
+    }
 }
