@@ -174,12 +174,15 @@ function CarregarAtendimentoModal(id, equipamento) {
     $("#id_chamado").val(id);
     $("#equipamento_atender").html(equipamento);
 }
-function ModalMais(data_atendimento, data_encerramento = "", tec_atendimento = "", tec_encerramento = "", laudotec) {
+function ModalMais(data_atendimento, data_encerramento = "", tec_atendimento = "", tec_encerramento = "", defeito, observacao, numero_nf, laudotec) {
 
     $("#dt_atendimento").val(data_atendimento);
     $("#dt_encerramento").val(data_encerramento);
     $("#tec_atendimento").val(tec_atendimento);
     $("#tec_encerramento").val(tec_encerramento);
+    $("#defeito").val(defeito);
+    $("#observacao").val(observacao);
+    $("#numero_nf").val(numero_nf);
     if (laudotec != null) {
         $("#laudo").val(laudotec);
     } else if (laudotec = null) {

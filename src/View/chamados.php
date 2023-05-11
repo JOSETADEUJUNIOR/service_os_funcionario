@@ -104,7 +104,8 @@
 		Verify();
 		//console.log(Verify());
 		FiltrarChamado();
-		CarregarEquipamentoAlocado();
+		CarregarProdutos();
+		CarregarClientes();
 	</script>
 
 

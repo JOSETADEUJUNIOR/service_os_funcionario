@@ -162,6 +162,76 @@ function CarregarEquipamentoAlocado() {
     return false;
 }
 
+function CarregarProdutos() {
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id){
+        Sair();
+    }
+    var id_setor_func = dadosAPI.setor_id;
+    var combo_produto = $("#produto");
+    combo_produto.empty();
+    var endpoint_produtos = "RetornarProdutos";
+    var dados = {
+        endpoint: endpoint_produtos,
+        id_setor: id_setor_func
+    }
+    $.ajax({
+        type: "POST",
+        url:BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (dados_ret) {
+            var resultado = dados_ret["result"];
+            console.log(resultado);
+            $('<option>').val("").text("Selecione").appendTo(combo_produto);
+
+            $(resultado).each(function () {
+
+                $('<option>').val(this.ProdID).text(this.ProdDescricao + " / estoque:" + this.ProdEstoque + " / R$:" + this.ProdValorVenda).appendTo(combo_produto);
+            })
+        }
+    })
+    return false;
+}
+
+function CarregarClientes() {
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id){
+        Sair();
+    }
+    var id_setor_func = dadosAPI.setor_id;
+    var combo_clientes = $("#cliente");
+    combo_clientes.empty();
+    var endpoint_clientes = "RetornarClientes";
+    var dados = {
+        endpoint: endpoint_clientes,
+        id_setor: id_setor_func
+    }
+    $.ajax({
+        type: "POST",
+        url:BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (dados_ret) {
+            var resultado = dados_ret["result"];
+            console.log(resultado);
+            $('<option>').val("").text("Selecione").appendTo(combo_clientes);
+
+            $(resultado).each(function () {
+
+                $('<option>').val(this.CliID).text(this.CliNome).appendTo(combo_clientes);
+            })
+        }
+    })
+    return false;
+}
+
 function AbrirChamado(id_form) {
 
     var dadosAPI = GetTnkValue();
@@ -169,13 +239,19 @@ function AbrirChamado(id_form) {
         Sair();
     }
     if (NotificarCampos(id_form)) {
-
+           
         var id_user_func = dadosAPI.funcionario_id;
+        var id_emp_func = dadosAPI.empresa_id;
         var dados = {
             endpoint: "AbrirChamado",
             id_user: id_user_func,
-            problema: $("#descricao").val().trim(),
-            id_alocar: $("#equipamento").val().trim()
+            empresa_id: id_emp_func,
+            numero_nf: $("#numero_nf").val(),
+            cliente_id: $("#cliente").val(),
+            problema: $("#descricao_problema").val().trim(),
+            defeito: $("#defeito").val().trim(),
+            observacao: $("#observacao").val().trim()
+           
         }
         console.log(dados);
         $.ajax({
@@ -189,10 +265,9 @@ function AbrirChamado(id_form) {
             },
             success: function (dados_ret) {
                 var resultado = dados_ret["result"];
-                $("#novoChamado").modal("hide");
+               $("#novoChamado").modal("hide");
                 if (resultado == '1') {
                     FiltrarChamado();
-                    CarregarEquipamentoAlocado();
                     LimparCampos();
                 }
             }
@@ -206,76 +281,74 @@ function AbrirChamado(id_form) {
 }
 
 function FiltrarChamado(situacao = 4) {
-
     filtro_chamado = situacao;
     let dadosAPI = GetTnkValue();
-    if (!dadosAPI.funcionario_id){
-        Sair();
+    if (!dadosAPI.funcionario_id) {
+      Sair();
     }
     let id_setor_logado = dadosAPI.setor_id;
-
+    let id_empresa = dadosAPI.empresa_id;
+  
     let dados = {
-        situacao: filtro_chamado,
-        endpoint: 'FiltrarChamadoGeral',
-        id_setor: id_setor_logado
+      situacao: filtro_chamado,
+      endpoint: 'FiltrarChamadoGeral',
+      id_setor: id_setor_logado,
+      empresa_id: id_empresa
     };
+  
     $.ajax({
-        type: "POST",
-        url:BASE_URL_AJAX("funcionario_api"),
-       // url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
-        data: JSON.stringify(dados),
-        headers: {
-            'Authorization': 'Bearer ' + GetTnk(),
-            'Content-Type': 'application/json'
-        },
-        success: function (dados_ret) {
-            var resultado = dados_ret['result'];
-            if (resultado) {
-                var table_start = '';
-                var table_end = '';
-                var table_data = '';
-
-                var table_start = '<table class="table table-hover" id="dynamic-table"><thead>';
-                var table_head = ' <tr><th>Data Abertura</th>\n' +
-                    '<th></th>\n' +
-                    ' <th>Funcionário</th>\n' +
-                    ' <th>Equipamento</th>\n' +
-                    ' <th>Problema</th>\n' +
-                    /* ' <th>Data Atendimento</th>\n' +
-                    ' <th>Técnico</th>\n' +
-                    ' <th>Data Encerramento</th>\n' +
-                    ' <th>Laudo</th>\n' + */
-                    ' </tr></thead>';
-
-                $(resultado).each(function () {
-                    table_data += '<tr>';
-                    table_data += '<td>';
-                    table_data += '<button type="button" class="btn btn-block btn-primary btn-sm" onclick="ModalMais(' + "'" + this.data_atendimento + "'" + ', ' + "'" + (this.data_encerramento != null ? this.data_encerramento : '') + "'" + ', ' + "'" + this.nome_tecnico + "'" + ', ' + "'" + (this.tecnico_encerramento != null ? this.tecnico_encerramento : '') + "'" + ',' + "'" + (this.laudo_tecnico != null ? this.laudo_tecnico : 'sem laudo') + "'" + ')" data-toggle="modal" data-target="#verMais">ver mais</button>';
-                    table_data += '<td>' + this.data_abertura + '</td>';
-                    table_data += '<td>' + this.nome_funcionario + '</td>';
-                    table_data += '<td>' + this.identificacao + ' / ' + "Modelo: " + this.nome_modelo + ' / ' + this.nome_tipo + '</td>';
-                    table_data += '<td>' + this.descricao_problema + '</td>';
-                   /*  table_data += '<td>' + (this.data_atendimento != null ? this.data_atendimento : '') + '</td>';
-                    table_data += '<td>' + (this.nome_tecnico != null ? this.nome_tecnico : '') + '</td>';
-                    table_data += '<td>' + (this.data_encerramento != null ? this.data_encerramento : '') + '</td>';
-                    table_data += '<td>' + (this.laudo_tecnico != null ? this.laudo_tecnico : '') + '</td>'; */
-
-                })
-                table_end = '</tbody></table>';
-
-                var vaso = table_start + table_head + table_data + table_end;
-
-                $("#dynamic-table").html(vaso);
-            } else {
-                MensageGenerica("Nenhum chamado encontrado");
-                $("#dynamic-table").html('');
-            }
+      type: "POST",
+      url: BASE_URL_AJAX("funcionario_api"),
+      // url: "http://localhost/service_os/src/Resource/api/funcionario_api.php",
+      data: JSON.stringify(dados),
+      headers: {
+        'Authorization': 'Bearer ' + GetTnk(),
+        'Content-Type': 'application/json'
+      },
+      success: function (dados_ret) {
+        var resultado = dados_ret['result'];
+        console.log(resultado);
+        if (resultado) {
+          var table_data = resultado.map(function (item) {
+            return `
+              <tr>
+                <td class="btn-group btn-group-sm">
+                  <button type="button" class="btn btn-primary" onclick="ModalMais('${item.data_atendimento}', '${item.data_encerramento || ""}', '${item.nome_tecnico || ""}', '${item.tecnico_encerramento || ""}', '${item.laudo_tecnico || "sem laudo"}')" data-toggle="modal" data-target="#verMais"><i class="fa fa-caret-square-o-down" aria-hidden="true"></i></button>
+                  <button type="button" class="btn btn-primary" onclick="ModalMais('${item.data_atendimento}', '${item.data_encerramento || ""}', '${item.nome_tecnico || ""}', '${item.tecnico_encerramento || ""}', '${item.laudo_tecnico || "sem laudo"}')" data-toggle="modal" data-target="#verMais"><i class="fa fa-list" aria-hidden="true"></i></button>
+                </td>
+                <td>${item.numero_nf}</td>
+                <td>${item.data_abertura}</td>
+                <td>${item.nome_funcionario}</td>
+                <td>${item.nome_cliente}</td>
+                <td>${item.descricao_problema}</td>
+              </tr>`;
+          }).join('');
+  
+          var vaso = `
+            <table class="table table-hover" id="dynamic-table">
+              <thead>
+                <tr>
+                  <th>Ações</th>
+                  <th>Numero da NF</th>
+                  <th>Data Abertura</th>
+                  <th>Funcionário</th>
+                  <th>Cliente</th>
+                  <th>Problema</th>
+                </tr>
+              </thead>
+              <tbody>${table_data}</tbody>
+            </table>
+          `;
+  
+          $("#dynamic-table").html(vaso);
+        } else {
+          MensageGenerica("Nenhum chamado encontrado");
+          $("#dynamic-table").html('');
         }
-
-
-    })
-
-}
+      }
+    });
+  }
+  
 
 function CarregarMeusDadosd() {
     var dadosAPI = GetTnkValue();

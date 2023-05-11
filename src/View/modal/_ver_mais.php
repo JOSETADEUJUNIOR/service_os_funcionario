@@ -7,6 +7,12 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                <div class="col-md-12 col-xs-12">
+                        <div class="form-group">
+                            <label>Numero da NF</label>
+                            <input class="form-control obg" readonly id="numero_nf_alter">
+                        </div>
+                    </div>
                     <div class="col-md-6 col-xs-12">
                         <div class="form-group">
                             <label>Data de atendimento</label>
@@ -29,6 +35,18 @@
                         <div class="form-group">
                             <label>Tecnico que encerrou</label>
                             <input class="form-control obg" readonly id="tec_encerramento">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Defeito</label>
+                            <textarea class="form-control obg" readonly id="defeito_alterar"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <div class="form-group">
+                            <label>Observação</label>
+                            <textarea class="form-control obg" readonly id="observacao_alterar"></textarea>
                         </div>
                     </div>
                     <div class="col-md-12 col-xs-12">
