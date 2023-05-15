@@ -175,14 +175,14 @@ function CarregarAtendimentoModal(id, equipamento) {
     $("#equipamento_atender").html(equipamento);
 }
 function ModalMais(data_atendimento, data_encerramento = "", tec_atendimento = "", tec_encerramento = "", defeito, observacao, numero_nf, laudotec) {
-
+    alert(data_atendimento);
     $("#dt_atendimento").val(data_atendimento);
     $("#dt_encerramento").val(data_encerramento);
     $("#tec_atendimento").val(tec_atendimento);
     $("#tec_encerramento").val(tec_encerramento);
-    $("#defeito").val(defeito);
-    $("#observacao").val(observacao);
-    $("#numero_nf").val(numero_nf);
+    $("#defeito_alterar").val(defeito);
+    $("#observacao_alterar").val(observacao);
+    $("#numero_nf_alter").val(numero_nf);
     if (laudotec != null) {
         $("#laudo").val(laudotec);
     } else if (laudotec = null) {
@@ -191,9 +191,10 @@ function ModalMais(data_atendimento, data_encerramento = "", tec_atendimento = "
     }
 }
 
-function CarregarDadosOS(id,numero_nf)
+function CarregarDadosOS(id, data_abertura, numero_nf)
 {
-    $("#numero_nf_alter").val(numero_nf);
+    $("#nf").html("#"+ numero_nf);
     $("#OsID").val(id); 
+    $("#data_abertura").html(data_abertura); 
     CarregarProdutosOS(id);
 }

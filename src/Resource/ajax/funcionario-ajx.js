@@ -295,11 +295,11 @@ function ListarProdutos() {
                     var checkbox = $("<input type='checkbox'>").attr("name", "produto_id[]").val(produto.ProdID);
                     colunaCheckbox.append(checkbox);
                     linha.append(colunaCheckbox);
-                    
-                }else{
+
+                } else {
                     var colunaSemSaldo = $("<td style=\"color:red\"></td>").text("item sem saldo");
                     linha.append(colunaSemSaldo);
-        
+
                 }
 
                 tabelaProdutos.append(linha);
@@ -371,14 +371,14 @@ $("#btn-gravar").click(function () {
         success: function (response) {
 
             if (response['result'] == -2) {
-                MensagemGenerica("Produto com saldo insulficiente", "warning");               
-            }else{
+                MensagemGenerica("Produto com saldo insulficiente", "warning");
+            } else {
                 MensagemGenerica("Produto Adicionado com sucesso", 'success');
                 ListarProdutos();
                 CarregarProdutosOS($("#OsID").val());
 
             }
- 
+
             // Processar a resposta da requisição
         },
         error: function (xhr, status, error) {
@@ -617,14 +617,36 @@ function FiltrarChamado(situacao = 4) {
         },
         success: function (dados_ret) {
             var resultado = dados_ret['result'];
-console.log(resultado);
+            console.log(resultado);
             if (resultado) {
                 var table_data = resultado.map(function (item) {
                     return `
               <tr>
+
+
+             
+
+
+
+
+
+
+
+
                 <td class="btn-group btn-group-sm">
-                  <button type="button" class="btn btn-primary" onclick="ModalMais('${item.data_atendimento}', '${item.data_encerramento || ""}', '${item.nome_tecnico || ""}', '${item.tecnico_encerramento || ""}', '${item.laudo_tecnico || "sem laudo"}')" data-toggle="modal" data-target="#verMais"><i class="fa fa-caret-square-o-down" aria-hidden="true"></i></button>
-                  <button type="button" class="btn btn-primary" onclick="CarregarDadosOS('${item.id}', '${item.numero_nf}')" data-toggle="modal" data-target="#dadosOS"><i class="fa fa-list" aria-hidden="true"></i></button>
+               
+                    <a class="green" href="#verMais" role="button" data-toggle="modal" onclick="ModalMais('${item.data_atendimento ||""}', '${item.data_encerramento || ""}', '${item.nome_tecnico || ""}', '${item.tecnico_encerramento || ""}', '${item.defeito || ""}', '${item.observacao || ""}', '${item.numero_nf}', '${item.laudo_tecnico || "sem laudo"}')">
+                        <i title="Alterar Setor" class="ace-icon fa fa-pencil bigger-130"></i>
+                    </a>
+                    <a class="green" href="#dadosOS" role="button" data-toggle="modal" onclick="CarregarDadosOS('${item.id}', '${item.data_abertura}', '${item.numero_nf}')">
+                        <i title="Itens da os" class="ace-icon fa fa-list bigger-130"></i>
+                    </a>
+                    <a class="red" href="#modalExcluir" data-toggle="modal" onclick="ExcluirModal('<?= $equipamentosAlocados[$i]['id_alocar'] ?>', '<?= $equipamentosAlocados[$i]['descricao'] ?>')">
+                        <i title="Excluir Equipamento" class="ace-icon fa fa-trash-o bigger-130"></i>
+                    </a>
+  
+  
+                
                 </td>
                 <td>${item.numero_nf}</td>
                 <td>${item.data_abertura}</td>
