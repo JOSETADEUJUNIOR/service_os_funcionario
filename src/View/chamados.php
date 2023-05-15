@@ -8,6 +8,34 @@
 
 	<meta name="description" content="Static &amp; Dynamic Tables" />
 
+	<style>
+		/* Estilização da tabela */
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		/* Estilização dos inputs */
+		input[type="number"],
+		input[type="text"] {
+			width: 60px;
+			padding: 4px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+		}
+
+		/* Aumentar o tamanho do checkbox */
+		input[type="checkbox"] {
+			transform: scale(1.5);
+		}
+	</style>
 
 
 </head>
@@ -80,6 +108,7 @@
 									</div>
 									<?php
 									include_once 'modal/_ver_mais.php';
+									include_once 'modal/_dadosOS.php';
 									?>
 								</div>
 							</div><!-- /.col -->
@@ -106,6 +135,16 @@
 		FiltrarChamado();
 		CarregarProdutos();
 		CarregarClientes();
+		
+		
+		$(document).ready(function() {
+			ListarProdutos();
+			
+			$("#btn-toggle-div").click(function() {
+        $("#div-produtos").toggle();
+    });
+		});
+		ModalAberto();
 	</script>
 
 

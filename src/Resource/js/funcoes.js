@@ -190,3 +190,10 @@ function ModalMais(data_atendimento, data_encerramento = "", tec_atendimento = "
         $("#laudo").val("não há dados");
     }
 }
+
+function CarregarDadosOS(id,numero_nf)
+{
+    $("#numero_nf_alter").val(numero_nf);
+    $("#OsID").val(id); 
+    CarregarProdutosOS(id);
+}

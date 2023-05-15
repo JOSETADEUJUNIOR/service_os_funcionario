@@ -7,6 +7,8 @@
 	<?php include_once PATH_URL . '/Template/_includes/_head.php' ?>
 
 	<meta name="description" content="Static &amp; Dynamic Tables" />
+
+
 </head>
 
 <body class="skin-1">
@@ -88,7 +90,7 @@
 													<div class="col-md-2">
 														<div class="form-group">
 															<label>Cep</label>
-															<input class="form-control obg" id="cep" name="cep"  onblur="BuscarCep()" placeholder="Digite o aqui....">
+															<input class="form-control obg" id="cep" name="cep" onblur="BuscarCep()" placeholder="Digite o aqui....">
 														</div>
 													</div>
 													<div class="col-md-4">
@@ -117,6 +119,8 @@
 										</form>
 									</div>
 								</div>
+
+								
 							</div>
 						</div>
 					</div>
@@ -139,6 +143,7 @@
 	<script>
 		Verify();
 		CarregarMeusDados();
+		
 	</script>
 
 
