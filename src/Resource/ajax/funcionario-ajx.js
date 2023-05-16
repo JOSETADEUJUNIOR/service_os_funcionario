@@ -56,7 +56,7 @@ function ValidarAcesso(id_form) {
             },
             success: function (dados_ret) {
                 var ret = dados_ret['result'];
-
+                
                 if (ret == -3) {
                     MensagemGenerica('Não autorizado', 'info');
                 } else if (ret == 0) {
@@ -227,17 +227,6 @@ function ModalAberto() {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 function ListarProdutos() {
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
@@ -245,11 +234,13 @@ function ListarProdutos() {
     }
     var id_setor_func = dadosAPI.setor_id;
     var combo_produto = $("#produto");
+    var id_empresa = dadosAPI.empresa_id;
     combo_produto.empty();
-    var endpoint_produtos = "RetornarProdutos";
+    var endpoint_produtos = "RetornarProdutosAPI";
     var dados = {
         endpoint: endpoint_produtos,
-        id_setor: id_setor_func
+        id_setor: id_setor_func,
+        id_emp_func: id_empresa
     }
     $.ajax({
         type: "POST",
@@ -261,6 +252,7 @@ function ListarProdutos() {
         },
         success: function (dados_ret) {
             var resultado = dados_ret["result"];
+            
 
             var tabelaProdutos = $("#tabela-produtos tbody");
             tabelaProdutos.empty(); // Limpa as linhas anteriores da tabela
@@ -303,6 +295,68 @@ function ListarProdutos() {
                 }
 
                 tabelaProdutos.append(linha);
+            }
+        }
+    });
+    return false;
+}
+
+function ListarServicos() {
+    alert('listando Serviços');
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id) {
+        Sair();
+    }
+    var id_setor_func = dadosAPI.setor_id;
+    var combo_servico = $("#servicos");
+    var id_empresa = dadosAPI.empresa_id;
+    combo_servico.empty();
+    var endpoint_servicos = "RetornarServicosAPI";
+    var dados = {
+        endpoint: endpoint_servicos,
+        id_setor: id_setor_func,
+        id_emp_func: id_empresa
+    }
+    $.ajax({
+        type: "POST",
+        url: BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (dados_ret_serv) {
+            var resultado_serv = dados_ret_serv["result"];
+            console.log(resultado_serv);
+
+            var tabelaServicos = $("#tabela-servicos tbody");
+            tabelaServicos.empty(); // Limpa as linhas anteriores da tabela
+
+            for (var i = 0; i < resultado_serv.length; i++) {
+                var servico = resultado_serv[i];
+                var linha = $("<tr></tr>");
+
+                // Coluna do nome do servico
+                var colunaNome = $("<td></td>").text(servico.ServDescricao);
+                linha.append(colunaNome);
+
+               
+                // Coluna do valor do produto
+                var colunaValor = $("<td id=\"valor\"></td>");
+                var inputValor = $("<input class=\"form-control\" type='text' readonly>").attr("name", "valor[]").val(servico.ServValor);
+                colunaValor.append(inputValor);
+                linha.append(colunaValor);
+
+                // Coluna do checkbox
+               
+                    var colunaCheckbox = $("<td></td>");
+                    var checkbox = $("<input type='checkbox'>").attr("name", "servico_id[]").val(servico.ServID);
+                    colunaCheckbox.append(checkbox);
+                    linha.append(colunaCheckbox);
+
+                
+
+                    tabelaServicos.append(linha);
             }
         }
     });
@@ -390,27 +444,98 @@ $("#btn-gravar").click(function () {
 })
 
 
-
-
-
-
-
-
-
-function CarregarProdutos() {
+$("#btn-gravar-serv").click(function () {
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
     }
-    var id_setor_func = dadosAPI.setor_id;
-    var combo_produto = $("#produto");
-    combo_produto.empty();
-    var endpoint_produtos = "RetornarProdutos";
+    // if (NotificarCampos(id_form)) {
+
+    var id_user_func = dadosAPI.funcionario_id;
+    var id_emp_func = dadosAPI.empresa_id;
+
+    // Obter os valores selecionados dos checkboxes e as quantidades dos inputs
+    var Servicos = [];
+
+    var servicosSelecionados = $("input[name='servico_id[]']:checked").each(function () {
+        var row = $(this).closest("tr")[0];
+        //var quantidade = $(row).find("input[name='quantidade[]']").val();
+       
+            Servicos.push({
+                "servico_id": $(row).find("input[name='servico_id[]']").val(),
+                "valor": $(row).find("input[name='valor[]']").val(),
+            });
+       
+    });
+    alert('passou o servico');
+    if (Servicos.length === 0) {
+        MensagemGenerica("Para gravar, adicione algum serviço", 'warning');
+        return;
+    }
+
+    let dados = {
+        endpoint: 'GravarDadosServicosOsGeral',
+        empresa_id: id_emp_func,
+        chamado_id: $("#OsID").val(),
+        Servicos: Servicos
+    }
+
+    // Montar os dados para enviar na requisição AJAX
+    $.ajax({
+        type: "POST",
+        url: BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (response) {
+
+            if (response['result'] == -2) {
+                MensagemGenerica("Produto com saldo insulficiente", "warning");
+            } else {
+                MensagemGenerica("Serviço Adicionado com sucesso", 'success');
+                ListarServicos();
+                CarregarServicosOS($("#OsID").val());
+                
+
+            }
+
+            // Processar a resposta da requisição
+        },
+        error: function (xhr, status, error) {
+            // Tratar erros na requisição
+            console.error(error);
+        }
+    });
+
+})
+
+function RemoveProdOS(ref_id, quantidade, produtoID)
+{
+    alert('chegou no RemoveProdOS');
+    alert(produtoID);
+    
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id) {
+        Sair();
+    }
+
+   
+    var empresa_func_id = dadosAPI.empresa_id;
+    var referencia_func_id = ref_id;
+    var qtd = quantidade;
+    var prodID = produtoID;
     var dados = {
-        endpoint: endpoint_produtos,
-        id_setor: id_setor_func
+        
+        endpoint: "RemoveProdOsAPI",
+        empresa_id: empresa_func_id,
+        quantidade_produto: qtd,
+        produto_id: prodID,
+        referencia_id: referencia_func_id
     }
     $.ajax({
+
         type: "POST",
         url: BASE_URL_AJAX("funcionario_api"),
         data: JSON.stringify(dados),
@@ -420,17 +545,65 @@ function CarregarProdutos() {
         },
         success: function (dados_ret) {
             var resultado = dados_ret["result"];
-
-            $('<option>').val("").text("Selecione").appendTo(combo_produto);
-
-            $(resultado).each(function () {
-
-                $('<option>').val(this.ProdID).text(this.ProdDescricao + " / estoque:" + this.ProdEstoque + " / R$:" + this.ProdValorVenda).appendTo(combo_produto);
-            })
+            
+            if (resultado == 1) {
+                ListarProdutos();
+                CarregarProdutosOS($("#OsID").val());
+                MensagemGenerica('Produto removido com sucesso', 'success');
+            } else {
+                alert('teste');
+                MensagemErro();
+            }
         }
     })
-    return false;
 }
+
+
+function RemoveServOS(ref_id, servicoID)
+{
+    alert('chegou no RemoveServico');
+    alert(servicoID);
+    
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id) {
+        Sair();
+    }
+
+   
+    var empresa_func_id = dadosAPI.empresa_id;
+    var referencia_func_id = ref_id;
+    var servID = servicoID;
+    var dados = {
+        
+        endpoint: "RemoveServOsAPI",
+        empresa_id: empresa_func_id,
+        servico_id: servID,
+        referencia_id: referencia_func_id
+    }
+    $.ajax({
+
+        type: "POST",
+        url: BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (dados_ret) {
+            var resultado = dados_ret["result"];
+            
+            if (resultado == 1) {
+                ListarServicos();
+                CarregarServicosOS($("#OsID").val());
+                MensagemGenerica('Serviço removido com sucesso', 'success');
+            } else {
+                alert('teste');
+                MensagemErro();
+            }
+        }
+    })
+}
+
 
 function CarregarClientes() {
     var dadosAPI = GetTnkValue();
@@ -455,7 +628,7 @@ function CarregarClientes() {
         },
         success: function (dados_ret) {
             var resultado = dados_ret["result"];
-            console.log(resultado);
+            
             $('<option>').val("").text("Selecione").appendTo(combo_clientes);
 
             $(resultado).each(function () {
@@ -535,7 +708,7 @@ function CarregarProdutosOS(id) {
         },
         success: function (dados_ret) {
             var itens = dados_ret['result'];
-            console.log(itens);
+            //console.log(itens);
             preencherTabelaItens(itens);
 
         }
@@ -543,7 +716,100 @@ function CarregarProdutosOS(id) {
     return false;
 }
 
+function CarregarServicosOS(id) {
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id) {
+        Sair();
+    }
+
+    var dados = {
+        endpoint: 'CarregarServicosOS',
+        chamado_id: id,
+    };
+    $.ajax({
+        type: "POST",
+        url: BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (dados_ret) {
+            var itens = dados_ret['result'];
+            //console.log(itens);
+            preencherTabelaServicos(itens);
+
+        }
+    })
+    return false;
+}
+
+function preencherTabelaServicos(itens) {
+    console.log(itens);
+    var tabelaServicos_os = $("#tabela-servicos_os tbody");
+    tabelaServicos_os.empty(); // Limpa as linhas anteriores da tabela
+
+    var totalGeral = 0; // Inicializa o total geral como 0
+
+    for (var i = 0; i < itens.length; i++) {
+        var item = itens[i];
+        var linha_os = $("<tr></tr>");
+
+        // Coluna da descrição do produto
+        var colunaDescricao_os = $("<td></td>").text(item.ServNome);
+        linha_os.append(colunaDescricao_os);
+
+         // Coluna da quantidade
+         var colunaServico_os = $("<td></td>").text('');
+         linha_os.append(colunaServico_os);
+         // Coluna da quantidade
+         var colunaQuantidade_os = $("<td></td>").text('1');
+         linha_os.append(colunaQuantidade_os);
+
+        // Coluna do valor unitário
+        var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
+        linha_os.append(colunaValorUnitario_os);
+
+       
+         // Coluna do botão de exclusão
+         var colunaExcluir = $("<td></td>");
+         var botaoExcluir = $("<button  class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
+         botaoExcluir.attr("data-referencia-id", item.referencia_id);
+         botaoExcluir.attr("data-servico-id", item.servico_ProdID);
+         
+         var valorTotal = 1 * item.valor; // calcula o valor total
+         totalGeral += valorTotal; // adiciona o valor total ao total geral
+         var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
+         linha_os.append(colunaValorTotal);
+
+
+         // Atribui o valor de item.referencia_id ao atributo data-referencia-id
+         botaoExcluir.click(function () {
+             var referenciaId = $(this).attr("data-referencia-id"); // Captura o valor do atributo data-referencia-id ao clicar no botão
+             var servicoId = $(this).attr("data-servico-id");
+             // Coloque aqui a lógica para excluir o produto com base no valor de referenciaId
+             RemoveProdOS(referenciaId, servicoId);
+         });
+         colunaExcluir.append(botaoExcluir);
+         linha_os.append(colunaExcluir);
+
+         tabelaServicos_os.append(linha_os);
+    }
+
+    // Adicionar a linha do total geral abaixo da tabela
+    var linhaTotalGeral = $("<tr style=\"background-color:#ddd\"></tr>");
+    var colunaTotalGeral = $("<td></td>").attr("colspan", "3").text("Total Geral:");
+    var colunaValorTotalGeral = $("<td></td>").text(formatarValorEmReais(totalGeral));
+    linhaTotalGeral.append(colunaTotalGeral, colunaValorTotalGeral);
+    tabelaServicos_os.append(linhaTotalGeral);
+}
+
+
+
+
+
 function preencherTabelaItens(itens) {
+    console.log(itens);
     var tabelaProdutos_os = $("#tabela-produtos_os tbody");
     tabelaProdutos_os.empty(); // Limpa as linhas anteriores da tabela
 
@@ -571,12 +837,29 @@ function preencherTabelaItens(itens) {
         var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
         linha_os.append(colunaValorTotal);
 
+         // Coluna do botão de exclusão
+         var colunaExcluir = $("<td></td>");
+         var botaoExcluir = $("<button  class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
+         botaoExcluir.attr("data-referencia-id", item.referencia_id);
+         botaoExcluir.attr("data-produto-id", item.produto_ProdID);
+         
+         // Atribui o valor de item.referencia_id ao atributo data-referencia-id
+         botaoExcluir.click(function () {
+             var referenciaId = $(this).attr("data-referencia-id"); // Captura o valor do atributo data-referencia-id ao clicar no botão
+             var produtoId = $(this).attr("data-produto-id");
+             var quantidade = item.quantidade;
+             // Coloque aqui a lógica para excluir o produto com base no valor de referenciaId
+             RemoveProdOS(referenciaId, quantidade, produtoId);
+         });
+         colunaExcluir.append(botaoExcluir);
+         linha_os.append(colunaExcluir);
+
         tabelaProdutos_os.append(linha_os);
     }
 
     // Adicionar a linha do total geral abaixo da tabela
     var linhaTotalGeral = $("<tr style=\"background-color:#ddd\"></tr>");
-    var colunaTotalGeral = $("<td></td>").attr("colspan", "3").text("Total Geral:");
+    var colunaTotalGeral = $("<td></td>").attr("colspan", "4").text("Total Geral:");
     var colunaValorTotalGeral = $("<td></td>").text(formatarValorEmReais(totalGeral));
     linhaTotalGeral.append(colunaTotalGeral, colunaValorTotalGeral);
     tabelaProdutos_os.append(linhaTotalGeral);
@@ -617,32 +900,21 @@ function FiltrarChamado(situacao = 4) {
         },
         success: function (dados_ret) {
             var resultado = dados_ret['result'];
-            console.log(resultado);
+          
             if (resultado) {
                 var table_data = resultado.map(function (item) {
                     return `
               <tr>
-
-
-             
-
-
-
-
-
-
-
-
-                <td class="btn-group btn-group-sm">
+                <td colspan="3">
                
-                    <a class="green" href="#verMais" role="button" data-toggle="modal" onclick="ModalMais('${item.data_atendimento ||""}', '${item.data_encerramento || ""}', '${item.nome_tecnico || ""}', '${item.tecnico_encerramento || ""}', '${item.defeito || ""}', '${item.observacao || ""}', '${item.numero_nf}', '${item.laudo_tecnico || "sem laudo"}')">
-                        <i title="Alterar Setor" class="ace-icon fa fa-pencil bigger-130"></i>
+                    <a class="green" href="#verMais" role="button" data-toggle="modal" onclick="ModalMais('${item.data_atendimento || ""}', '${item.data_encerramento || ""}', '${item.nome_tecnico || ""}', '${item.tecnico_encerramento || ""}', '${item.defeito || ""}', '${item.observacao || ""}', '${item.numero_nf}', '${item.laudo_tecnico || "sem laudo"}')">
+                        <i title="Alterar Setor" class="ace-icon fa fa-pencil bigger-120"></i>
                     </a>
                     <a class="green" href="#dadosOS" role="button" data-toggle="modal" onclick="CarregarDadosOS('${item.id}', '${item.data_abertura}', '${item.numero_nf}')">
-                        <i title="Itens da os" class="ace-icon fa fa-list bigger-130"></i>
+                        <i title="Itens da os" class="ace-icon fa fa-list bigger-120"></i>
                     </a>
                     <a class="red" href="#modalExcluir" data-toggle="modal" onclick="ExcluirModal('<?= $equipamentosAlocados[$i]['id_alocar'] ?>', '<?= $equipamentosAlocados[$i]['descricao'] ?>')">
-                        <i title="Excluir Equipamento" class="ace-icon fa fa-trash-o bigger-130"></i>
+                        <i title="Excluir Equipamento" class="ace-icon fa fa-trash-o bigger-120"></i>
                     </a>
   
   
@@ -660,7 +932,7 @@ function FiltrarChamado(situacao = 4) {
             <table class="table table-hover" id="dynamic-table">
               <thead>
                 <tr>
-                  <th>Ações</th>
+                  <th colspan="3">Ações</th>
                   <th>Numero da NF</th>
                   <th>Data Abertura</th>
                   <th>Funcionário</th>

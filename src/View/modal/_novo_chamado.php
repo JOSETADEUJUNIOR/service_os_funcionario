@@ -7,10 +7,10 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
+                <div class="col-md-6 col-xs-6">
                         <div class="form-group">
                             <label>Numero da NF</label>
-                            <input class="form-control obg" type="text" id="numero_nf" name="numero_nf">
+                            <input class="form-control obg" id="numero_nf" name="numero_nf">
                         </div>
                     </div>
                     <div class="col-md-6">

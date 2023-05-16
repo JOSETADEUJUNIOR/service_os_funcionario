@@ -197,4 +197,7 @@ function CarregarDadosOS(id, data_abertura, numero_nf)
     $("#OsID").val(id); 
     $("#data_abertura").html(data_abertura); 
     CarregarProdutosOS(id);
+    CarregarServicosOS(id);
+    ListarProdutos();
+    ListarServicos();
 }

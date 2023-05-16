@@ -15,6 +15,7 @@
                         </h3>
 
                         <div class="widget-toolbar no-border invoice-info">
+                            <input type="hidden" id="OsID">
                             <span class="invoice-info-label">Numero da NF:</span>
                             <span id="nf" class="red"></span>
 
@@ -29,67 +30,37 @@
                             </a>
                         </div>
                     </div>
-                   
+
                     <div class="col-sm-6">
-														<div class="row">
-															<div
-																class="col-xs-11 label label-lg label-info arrowed-in arrowed-right">
-																<b>Company Info</b>
-															</div>
-														</div>
+                        <div class="row">
+                            <div>
+                                <button class="col-xs-11 label label-lg label-info arrowed-in arrowed-right" id="btn-toggle-div"><b>Adicionar produtos</b> </button>
+                            </div>
+                       
 
-														<div>
-															<ul class="list-unstyled spaced">
-																<li>
-																	<i
-																		class="ace-icon fa fa-caret-right blue"></i>Street,
-																	City
-																</li>
-
-																<li>
-																	<i class="ace-icon fa fa-caret-right blue"></i>Zip
-																	Code
-																</li>
-
-																<li>
-																	<i
-																		class="ace-icon fa fa-caret-right blue"></i>State,
-																	Country
-																</li>
-
-																<li>
-																	<i class="ace-icon fa fa-caret-right blue"></i>
-																	Phone:
-																	<b class="red">111-111-111</b>
-																</li>
-
-																<li class="divider"></li>
-
-																<li>
-																	<i class="ace-icon fa fa-caret-right blue"></i>
-																	Paymant Info
-																</li>
-															</ul>
-														</div>
-													</div><!-- /.col -->
-
-
-
-
-
-
-
-
-
-
-
-
-                    <div class="col-md-12 col-xs-12">
-                        <div class="form-group">
-                            <i style="color:blue" class="fa fa-shopping-cart fa-3x" aria-hidden="true">sessão para adicionar os produtos</i>
-                            <button id="btn-toggle-div" class="btn btn-primary btn-xs">Carregar a lista de produtos</button>
                         </div>
-                    </div>
+                    </div><!-- /.col -->
+
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div>
+                                <button class="col-xs-11 label label-lg label-info arrowed-in arrowed-right" id="btn-toggle-div-serv"><b>Adicionar servicos</b> </button>
+                            </div>
+                       
+
+                        </div>
+                    </div><!-- /.col -->
+
+
+
+
+
+
+
+
+
+
+
                     <!--  <div class="col-md-7 col-xs-7">
                         <div class="form-group">
                             <label>Lançar Produtos</label>
@@ -136,6 +107,30 @@
                                 </thead>
                                 <tbody></tbody>
                             </table>
+                            <button style="float: right; margin-top: 10px;" id="btn-gravar" class="btn btn-success btn-xs" type="button">Incluir produto</button>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-xs-12">
+                        <hr>
+
+
+                        <div id="div-servicos" style="display: none;">
+                            <h2>Lista de Serviços</h2>
+                            <table id="tabela-servicos" class="table table-striped table-bordered table-hover">
+
+                                <thead>
+                                    <tr>
+                                        <th>Serviços</th>
+                                        <th>Valor</th>
+                                        <th>Selecionar</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <button style="float: right; margin-top: 10px;" id="btn-gravar-serv" class="btn btn-success btn-xs" type="button">Incluir serviço</button>
+
                         </div>
                     </div>
 
@@ -144,7 +139,7 @@
 
 
 
-                        <h2>Lista de Produtos</h2>
+                        <h2>Listagem dos Produtos</h2>
                         <table id="tabela-produtos_os" class="table table-striped table-bordered table-hover">
 
                             <thead>
@@ -153,6 +148,27 @@
                                     <th>Quantidade</th>
                                     <th>Valor Unitário</th>
                                     <th>Valor Total</th>
+                                    <th>Excluir</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                    </div>
+                    <div class="col-md-12 col-xs-12">
+
+
+
+                        <h2>Listagem dos Serviços</h2>
+                        <table id="tabela-servicos_os" class="table table-striped table-bordered table-hover">
+
+                            <thead>
+                                <tr>
+                                    <th>Servico</th>
+                                    <th></th>
+                                    <th>Quantidade</th>
+                                    <th>Valor Unitário</th>
+                                    <th>Excluir</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -163,8 +179,8 @@
 
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" id="btnCancelar" onclick="FechandoModal('form_atendimento')" class="btn btn-info" data-dismiss="modal">Cancelar</button>
-                <button id="btn-gravar" class="btn btn-success" type="button">Gravar dados da OS</button>
+                <button type="button" id="btnCancelar" onclick="FechandoModal('form_atendimento')" class="btn btn-info" data-dismiss="modal">Salvar dados</button>
+
             </div>
 
         </div>

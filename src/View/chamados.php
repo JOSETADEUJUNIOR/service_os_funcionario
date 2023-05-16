@@ -133,18 +133,21 @@
 		Verify();
 		//console.log(Verify());
 		FiltrarChamado();
-		CarregarProdutos();
+		//CarregarProdutos();
 		CarregarClientes();
-		
-		
-		$(document).ready(function() {
-			ListarProdutos();
-			
-			$("#btn-toggle-div").click(function() {
-        $("#div-produtos").toggle();
-    });
+
+
+		/* 	$(document).ready(function() {
+				ListarProdutos();
+				
+			});
+			ModalAberto(); */
+		$("#btn-toggle-div").click(function() {
+			$("#div-produtos").toggle();
 		});
-		ModalAberto();
+		$("#btn-toggle-div-serv").click(function() {
+			$("#div-servicos").toggle();
+		});
 	</script>
 
 
