@@ -36,7 +36,7 @@
                             <div>
                                 <button class="col-xs-11 label label-lg label-info arrowed-in arrowed-right" id="btn-toggle-div"><b>Adicionar produtos</b> </button>
                             </div>
-                       
+
 
                         </div>
                     </div><!-- /.col -->
@@ -46,7 +46,7 @@
                             <div>
                                 <button class="col-xs-11 label label-lg label-info arrowed-in arrowed-right" id="btn-toggle-div-serv"><b>Adicionar servicos</b> </button>
                             </div>
-                       
+
 
                         </div>
                     </div><!-- /.col -->
@@ -113,7 +113,7 @@
                     </div>
 
                     <div class="col-md-12 col-xs-12">
-                        <hr>
+                       
 
 
                         <div id="div-servicos" style="display: none;">
@@ -133,45 +133,28 @@
 
                         </div>
                     </div>
-
-
                     <div class="col-md-12 col-xs-12">
-
-
-
-                        <h2>Listagem dos Produtos</h2>
-                        <table id="tabela-produtos_os" class="table table-striped table-bordered table-hover">
-
+                        <h2>Listagem dos Serviços</h2>
+                        <table id="tabela-itens_os" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Produto</th>
+                                    <th>Descrição</th>
+                                    <th>Tipo</th>
                                     <th>Quantidade</th>
                                     <th>Valor Unitário</th>
                                     <th>Valor Total</th>
-                                    <th>Excluir</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
-                        </table>
-
-                    </div>
-                    <div class="col-md-12 col-xs-12">
-
-
-
-                        <h2>Listagem dos Serviços</h2>
-                        <table id="tabela-servicos_os" class="table table-striped table-bordered table-hover">
-
-                            <thead>
-                                <tr>
-                                    <th>Servico</th>
-                                    <th></th>
-                                    <th>Quantidade</th>
-                                    <th>Valor Unitário</th>
-                                    <th>Excluir</th>
+                            <tbody>
+                                <!-- As linhas dos itens serão adicionadas aqui dinamicamente -->
+                            </tbody>
+                           <!--  <tfoot>
+                                <tr style="background-color:#ddd">
+                                    <td colspan="5">Total Geral:</td>
+                                    <td></td>
                                 </tr>
-                            </thead>
-                            <tbody></tbody>
+                            </tfoot> -->
                         </table>
 
                     </div>

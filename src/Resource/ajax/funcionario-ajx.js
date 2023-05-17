@@ -302,7 +302,6 @@ function ListarProdutos() {
 }
 
 function ListarServicos() {
-    alert('listando Serviços');
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
@@ -496,7 +495,7 @@ $("#btn-gravar-serv").click(function () {
             } else {
                 MensagemGenerica("Serviço Adicionado com sucesso", 'success');
                 ListarServicos();
-                CarregarServicosOS($("#OsID").val());
+                CarregarProdutosOS($("#OsID").val());
                 
 
             }
@@ -594,7 +593,8 @@ function RemoveServOS(ref_id, servicoID)
             
             if (resultado == 1) {
                 ListarServicos();
-                CarregarServicosOS($("#OsID").val());
+                ListarProdutos();
+                CarregarProdutosOS($("#OsID").val());
                 MensagemGenerica('Serviço removido com sucesso', 'success');
             } else {
                 alert('teste');
@@ -689,13 +689,14 @@ function AbrirChamado(id_form) {
 }
 
 function CarregarProdutosOS(id) {
+    alert('entrou no listar prod');
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
     }
 
     var dados = {
-        endpoint: 'CarregarProdutosOS',
+        endpoint: 'CarregarProdServOS',
         chamado_id: id,
     };
     $.ajax({
@@ -716,102 +717,10 @@ function CarregarProdutosOS(id) {
     return false;
 }
 
-function CarregarServicosOS(id) {
-    var dadosAPI = GetTnkValue();
-    if (!dadosAPI.funcionario_id) {
-        Sair();
-    }
-
-    var dados = {
-        endpoint: 'CarregarServicosOS',
-        chamado_id: id,
-    };
-    $.ajax({
-        type: "POST",
-        url: BASE_URL_AJAX("funcionario_api"),
-        data: JSON.stringify(dados),
-        headers: {
-            'Authorization': 'Bearer ' + GetTnk(),
-            'Content-Type': 'application/json'
-        },
-        success: function (dados_ret) {
-            var itens = dados_ret['result'];
-            //console.log(itens);
-            preencherTabelaServicos(itens);
-
-        }
-    })
-    return false;
-}
-
-function preencherTabelaServicos(itens) {
-    console.log(itens);
-    var tabelaServicos_os = $("#tabela-servicos_os tbody");
-    tabelaServicos_os.empty(); // Limpa as linhas anteriores da tabela
-
-    var totalGeral = 0; // Inicializa o total geral como 0
-
-    for (var i = 0; i < itens.length; i++) {
-        var item = itens[i];
-        var linha_os = $("<tr></tr>");
-
-        // Coluna da descrição do produto
-        var colunaDescricao_os = $("<td></td>").text(item.ServNome);
-        linha_os.append(colunaDescricao_os);
-
-         // Coluna da quantidade
-         var colunaServico_os = $("<td></td>").text('');
-         linha_os.append(colunaServico_os);
-         // Coluna da quantidade
-         var colunaQuantidade_os = $("<td></td>").text('1');
-         linha_os.append(colunaQuantidade_os);
-
-        // Coluna do valor unitário
-        var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
-        linha_os.append(colunaValorUnitario_os);
-
-       
-         // Coluna do botão de exclusão
-         var colunaExcluir = $("<td></td>");
-         var botaoExcluir = $("<button  class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
-         botaoExcluir.attr("data-referencia-id", item.referencia_id);
-         botaoExcluir.attr("data-servico-id", item.servico_ProdID);
-         
-         var valorTotal = 1 * item.valor; // calcula o valor total
-         totalGeral += valorTotal; // adiciona o valor total ao total geral
-         var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
-         linha_os.append(colunaValorTotal);
-
-
-         // Atribui o valor de item.referencia_id ao atributo data-referencia-id
-         botaoExcluir.click(function () {
-             var referenciaId = $(this).attr("data-referencia-id"); // Captura o valor do atributo data-referencia-id ao clicar no botão
-             var servicoId = $(this).attr("data-servico-id");
-             // Coloque aqui a lógica para excluir o produto com base no valor de referenciaId
-             RemoveProdOS(referenciaId, servicoId);
-         });
-         colunaExcluir.append(botaoExcluir);
-         linha_os.append(colunaExcluir);
-
-         tabelaServicos_os.append(linha_os);
-    }
-
-    // Adicionar a linha do total geral abaixo da tabela
-    var linhaTotalGeral = $("<tr style=\"background-color:#ddd\"></tr>");
-    var colunaTotalGeral = $("<td></td>").attr("colspan", "3").text("Total Geral:");
-    var colunaValorTotalGeral = $("<td></td>").text(formatarValorEmReais(totalGeral));
-    linhaTotalGeral.append(colunaTotalGeral, colunaValorTotalGeral);
-    tabelaServicos_os.append(linhaTotalGeral);
-}
-
-
-
-
-
 function preencherTabelaItens(itens) {
     console.log(itens);
-    var tabelaProdutos_os = $("#tabela-produtos_os tbody");
-    tabelaProdutos_os.empty(); // Limpa as linhas anteriores da tabela
+    var tabelaItens_os = $("#tabela-itens_os tbody");
+    tabelaItens_os.empty(); // Limpa as linhas anteriores da tabela
 
     var totalGeral = 0; // Inicializa o total geral como 0
 
@@ -819,50 +728,63 @@ function preencherTabelaItens(itens) {
         var item = itens[i];
         var linha_os = $("<tr></tr>");
 
-        // Coluna da descrição do produto
-        var colunaDescricao_os = $("<td></td>").text(item.ProdDescricao);
-        linha_os.append(colunaDescricao_os);
+        // Verifica se é um produto ou serviço
+        var tipoItem = item.ProdDescricao ? "Produto" : "Serviço";
+        var colunaTipo_os = $("<td></td>").text(tipoItem);
 
-        // Coluna da quantidade
-        var colunaQuantidade_os = $("<td></td>").text(item.quantidade);
-        linha_os.append(colunaQuantidade_os);
+        if (item.ProdDescricao) {
+            // É um produto
+            var colunaDescricao_os = $("<td></td>").text(item.ProdDescricao);
+            var colunaQuantidade_os = $("<td></td>").text(item.quantidade);
+            var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
+            var valorTotal = item.quantidade * item.valor;
+            var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
+            var botaoExcluir = $("<button class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
+            botaoExcluir.attr("data-referencia-id", item.referencia_id);
+            botaoExcluir.attr("data-produto-id", item.produto_ProdID);
 
-        // Coluna do valor unitário
-        var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
-        linha_os.append(colunaValorUnitario_os);
+            botaoExcluir.click(function () {
+                var referenciaId = $(this).attr("data-referencia-id");
+                var produtoId = $(this).attr("data-produto-id");
+                var quantidade = item.quantidade;
+                RemoveProdOS(referenciaId, quantidade, produtoId);
+            });
 
-        // Coluna do valor total
-        var valorTotal = item.quantidade * item.valor; // calcula o valor total
-        totalGeral += valorTotal; // adiciona o valor total ao total geral
-        var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
-        linha_os.append(colunaValorTotal);
+            var colunaExcluir = $("<td></td>").append(botaoExcluir);
 
-         // Coluna do botão de exclusão
-         var colunaExcluir = $("<td></td>");
-         var botaoExcluir = $("<button  class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
-         botaoExcluir.attr("data-referencia-id", item.referencia_id);
-         botaoExcluir.attr("data-produto-id", item.produto_ProdID);
-         
-         // Atribui o valor de item.referencia_id ao atributo data-referencia-id
-         botaoExcluir.click(function () {
-             var referenciaId = $(this).attr("data-referencia-id"); // Captura o valor do atributo data-referencia-id ao clicar no botão
-             var produtoId = $(this).attr("data-produto-id");
-             var quantidade = item.quantidade;
-             // Coloque aqui a lógica para excluir o produto com base no valor de referenciaId
-             RemoveProdOS(referenciaId, quantidade, produtoId);
-         });
-         colunaExcluir.append(botaoExcluir);
-         linha_os.append(colunaExcluir);
+            linha_os.append(colunaDescricao_os, colunaTipo_os, colunaQuantidade_os, colunaValorUnitario_os, colunaValorTotal, colunaExcluir);
+        } else {
+            // É um serviço
+            var colunaDescricao_os = $("<td></td>").text(item.ServNome);
+            var colunaQuantidade_os = $("<td></td>").text('1');
+            var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
+            var valorTotal = 1 * item.valor;
+            var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
+            var botaoExcluir = $("<button class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
+            botaoExcluir.attr("data-referencia-id", item.referencia_id);
+            botaoExcluir.attr("data-servico-id", item.servico_ProdID);
 
-        tabelaProdutos_os.append(linha_os);
+            botaoExcluir.click(function () {
+                var referenciaId = $(this).attr("data-referencia-id");
+                var servicoId = $(this).attr("data-servico-id");
+                RemoveServOS(referenciaId, servicoId);
+            });
+
+            var colunaExcluir = $("<td></td>").append(botaoExcluir);
+
+            linha_os.append(colunaDescricao_os, colunaTipo_os, colunaQuantidade_os, colunaValorUnitario_os, colunaValorTotal, colunaExcluir);
+        }
+
+        tabelaItens_os.append(linha_os);
+        totalGeral += valorTotal;
     }
 
     // Adicionar a linha do total geral abaixo da tabela
     var linhaTotalGeral = $("<tr style=\"background-color:#ddd\"></tr>");
-    var colunaTotalGeral = $("<td></td>").attr("colspan", "4").text("Total Geral:");
+    var colunaTotalGeral = $("<td></td>").attr("colspan", "5").text("Total Geral:");
     var colunaValorTotalGeral = $("<td></td>").text(formatarValorEmReais(totalGeral));
     linhaTotalGeral.append(colunaTotalGeral, colunaValorTotalGeral);
-    tabelaProdutos_os.append(linhaTotalGeral);
+    tabelaItens_os.append(linhaTotalGeral);
 }
 
 function formatarValorEmReais(valor) {
