@@ -8,7 +8,7 @@ function RemoverLoad() {
 }
 
 function AlterarSetorModal(id, nome) {
-    alert(id, nome)
+    
     $("#AlteraID").val(id);
     $("#nome").val(nome);
 }
@@ -30,7 +30,7 @@ function ExcluirModal(id, nome) {
 
 }
 function AlterarUsuarioModal(id, tipo, nome, email, telefone, cep, rua, bairro, cidade, sigla_estado, empresa_tecnico, setor_id, id_end) {
-    alert('chamou');
+    
     EscolherUsuario(tipo);
     $("#id_user").val(id);
     $("#tipo").val(tipo);
@@ -57,6 +57,11 @@ function FechandoModal(form_id) {
     LimparCampos(form_id)
 }
 
+function FechandoModalOS()
+{
+    $("#div-produtos").hide();
+    $("#div-servicos").hide();
+}
 function NotificarCampos(form_id) {
 
     var ret = true;
@@ -98,8 +103,7 @@ function BASE_URL_AJAX($file_ajax) {
     return URL_API + $file_ajax + ".php";
 }
 function EscolherUsuario(tipo) {
-    alert(tipo);
-
+    
     switch (tipo) {
         case '2':
             $("#divFunc").show();
@@ -175,7 +179,7 @@ function CarregarAtendimentoModal(id, equipamento) {
     $("#equipamento_atender").html(equipamento);
 }
 function ModalMais(data_atendimento, data_encerramento = "", tec_atendimento = "", tec_encerramento = "", defeito, observacao, numero_nf, laudotec) {
-    alert(data_atendimento);
+    
     $("#dt_atendimento").val(data_atendimento);
     $("#dt_encerramento").val(data_encerramento);
     $("#tec_atendimento").val(tec_atendimento);

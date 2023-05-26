@@ -1,7 +1,6 @@
 
 
 function CarregarMeusDados() {
-    //alert(BASE_URL_AJAX("funcionario_api"));
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
@@ -56,7 +55,7 @@ function ValidarAcesso(id_form) {
             },
             success: function (dados_ret) {
                 var ret = dados_ret['result'];
-                
+                console.log(ret);
                 if (ret == -3) {
                     MensagemGenerica('Não autorizado', 'info');
                 } else if (ret == 0) {
@@ -120,7 +119,7 @@ function AlterarMeusDados(id_form) {
                 if (resultado == 1) {
                     MensageGenerica('ola', 'warning');
                 } else {
-                    alert('teste');
+                    
                     MensagemErro();
                 }
             }
@@ -130,7 +129,7 @@ function AlterarMeusDados(id_form) {
 
     return false;
 }
-function CarregarEquipamentoAlocado() {
+/* function CarregarEquipamentoAlocado() {
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
@@ -163,10 +162,10 @@ function CarregarEquipamentoAlocado() {
     })
     return false;
 }
-
+ */
 
 function GravarDadosOs() {
-    alert('gravando');
+    
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
@@ -217,8 +216,7 @@ function GravarDadosOs() {
 
 function ModalAberto() {
     if ($("#dadosOS").is(":visible")) {
-        alert('sdas');
-        modal({
+             modal({
             backdrop: 'static',
             keyboard: false
         });
@@ -252,7 +250,7 @@ function ListarProdutos() {
         },
         success: function (dados_ret) {
             var resultado = dados_ret["result"];
-            
+            console.log(resultado);
 
             var tabelaProdutos = $("#tabela-produtos tbody");
             tabelaProdutos.empty(); // Limpa as linhas anteriores da tabela
@@ -362,15 +360,6 @@ function ListarServicos() {
     return false;
 }
 
-
-
-
-
-
-
-
-
-
 $("#btn-gravar").click(function () {
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
@@ -466,7 +455,7 @@ $("#btn-gravar-serv").click(function () {
             });
        
     });
-    alert('passou o servico');
+    
     if (Servicos.length === 0) {
         MensagemGenerica("Para gravar, adicione algum serviço", 'warning');
         return;
@@ -512,8 +501,8 @@ $("#btn-gravar-serv").click(function () {
 
 function RemoveProdOS(ref_id, quantidade, produtoID)
 {
-    alert('chegou no RemoveProdOS');
-    alert(produtoID);
+    
+    
     
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
@@ -550,8 +539,7 @@ function RemoveProdOS(ref_id, quantidade, produtoID)
                 CarregarProdutosOS($("#OsID").val());
                 MensagemGenerica('Produto removido com sucesso', 'success');
             } else {
-                alert('teste');
-                MensagemErro();
+                     MensagemErro();
             }
         }
     })
@@ -560,8 +548,8 @@ function RemoveProdOS(ref_id, quantidade, produtoID)
 
 function RemoveServOS(ref_id, servicoID)
 {
-    alert('chegou no RemoveServico');
-    alert(servicoID);
+    
+    
     
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
@@ -597,8 +585,7 @@ function RemoveServOS(ref_id, servicoID)
                 CarregarProdutosOS($("#OsID").val());
                 MensagemGenerica('Serviço removido com sucesso', 'success');
             } else {
-                alert('teste');
-                MensagemErro();
+                     MensagemErro();
             }
         }
     })
@@ -615,6 +602,8 @@ function CarregarClientes() {
     combo_clientes.empty();
     var endpoint_clientes = "RetornarClientes";
     var dados = {
+        tipo: dadosAPI.tipo,
+        empresa_id: dadosAPI.empresa_id,
         endpoint: endpoint_clientes,
         id_setor: id_setor_func
     }
@@ -628,7 +617,7 @@ function CarregarClientes() {
         },
         success: function (dados_ret) {
             var resultado = dados_ret["result"];
-            
+            console.log(resultado);
             $('<option>').val("").text("Selecione").appendTo(combo_clientes);
 
             $(resultado).each(function () {
@@ -689,7 +678,7 @@ function AbrirChamado(id_form) {
 }
 
 function CarregarProdutosOS(id) {
-    alert('entrou no listar prod');
+    
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
@@ -718,7 +707,10 @@ function CarregarProdutosOS(id) {
 }
 
 function preencherTabelaItens(itens) {
-    console.log(itens);
+    
+    if (itens !="") {
+        
+    $("#div_listagem_itens_os").show();
     var tabelaItens_os = $("#tabela-itens_os tbody");
     tabelaItens_os.empty(); // Limpa as linhas anteriores da tabela
 
@@ -785,6 +777,9 @@ function preencherTabelaItens(itens) {
     var colunaValorTotalGeral = $("<td></td>").text(formatarValorEmReais(totalGeral));
     linhaTotalGeral.append(colunaTotalGeral, colunaValorTotalGeral);
     tabelaItens_os.append(linhaTotalGeral);
+}else{
+    $("#div_listagem_itens_os").hide();
+}
 }
 
 function formatarValorEmReais(valor) {
@@ -822,9 +817,18 @@ function FiltrarChamado(situacao = 4) {
         },
         success: function (dados_ret) {
             var resultado = dados_ret['result'];
-          
+            console.log(resultado);
+            var status = '';
             if (resultado) {
                 var table_data = resultado.map(function (item) {
+
+                if (item.data_abertura!=null && item.data_atendimento == null) {
+                    status = '<span class="label label-info arrowed-right arrowed-in">Em aberto</span>';
+                }else if (item.data_atendimento != null && item.tecnico_encerramento == null ) {
+                    status = '<span class="label label-warning arrowed arrowed-right">Em atendimento</span>';
+                } else if (item.tecnico_encerramento != null ) {
+                    status = '<span class="label label-success arrowed-in arrowed-in-right">Concluída</span>';
+                }
                     return `
               <tr>
                 <td colspan="3">
@@ -835,9 +839,7 @@ function FiltrarChamado(situacao = 4) {
                     <a class="green" href="#dadosOS" role="button" data-toggle="modal" onclick="CarregarDadosOS('${item.id}', '${item.data_abertura}', '${item.numero_nf}')">
                         <i title="Itens da os" class="ace-icon fa fa-list bigger-120"></i>
                     </a>
-                    <a class="red" href="#modalExcluir" data-toggle="modal" onclick="ExcluirModal('<?= $equipamentosAlocados[$i]['id_alocar'] ?>', '<?= $equipamentosAlocados[$i]['descricao'] ?>')">
-                        <i title="Excluir Equipamento" class="ace-icon fa fa-trash-o bigger-120"></i>
-                    </a>
+                   
   
   
                 
@@ -846,6 +848,7 @@ function FiltrarChamado(situacao = 4) {
                 <td>${item.data_abertura}</td>
                 <td>${item.nome_funcionario}</td>
                 <td>${item.nome_cliente}</td>
+                <td>${status}</td>
                 <td>${item.descricao_problema}</td>
               </tr>`;
                 }).join('');
@@ -859,6 +862,7 @@ function FiltrarChamado(situacao = 4) {
                   <th>Data Abertura</th>
                   <th>Funcionário</th>
                   <th>Cliente</th>
+                  <th>Status</th>
                   <th>Problema</th>
                 </tr>
               </thead>

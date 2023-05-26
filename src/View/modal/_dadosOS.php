@@ -133,8 +133,8 @@
 
                         </div>
                     </div>
-                    <div class="col-md-12 col-xs-12">
-                        <h2>Listagem dos Serviços</h2>
+                    <div class="col-md-12 col-xs-12" id="div_listagem_itens_os" style="display:none">
+                        <h2>Produtos e serviços</h2>
                         <table id="tabela-itens_os" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -162,7 +162,7 @@
 
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" id="btnCancelar" onclick="FechandoModal('form_atendimento')" class="btn btn-info" data-dismiss="modal">Salvar dados</button>
+                <button type="button" id="btnCancelar" onclick="FechandoModalOS()" class="btn btn-info" data-dismiss="modal">Salvar dados</button>
 
             </div>
 
