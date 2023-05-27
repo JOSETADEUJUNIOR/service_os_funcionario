@@ -35,6 +35,10 @@
 		input[type="checkbox"] {
 			transform: scale(1.5);
 		}
+		
+		.list_prod{
+			background-image: red;
+		}
 	</style>
 
 
@@ -109,6 +113,7 @@
 									<?php
 									include_once 'modal/_ver_mais.php';
 									include_once 'modal/_dadosOS.php';
+									include_once 'modal/_print_os.php';
 									?>
 								</div>
 							</div><!-- /.col -->

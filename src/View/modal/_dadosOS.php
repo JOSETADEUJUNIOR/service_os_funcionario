@@ -16,6 +16,7 @@
 
                         <div class="widget-toolbar no-border invoice-info">
                             <input type="hidden" id="OsID">
+                            <input type="hidden" id="status">
                             <span class="invoice-info-label">Numero da NF:</span>
                             <span id="nf" class="red"></span>
 
@@ -31,7 +32,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div id="div_produto" class="col-sm-6">
                         <div class="row">
                             <div>
                                 <button class="col-xs-11 label label-lg label-info arrowed-in arrowed-right" id="btn-toggle-div"><b>Adicionar produtos</b> </button>
@@ -41,7 +42,7 @@
                         </div>
                     </div><!-- /.col -->
 
-                    <div class="col-sm-6">
+                    <div id="div_servico" class="col-sm-6">
                         <div class="row">
                             <div>
                                 <button class="col-xs-11 label label-lg label-info arrowed-in arrowed-right" id="btn-toggle-div-serv"><b>Adicionar servicos</b> </button>
@@ -51,53 +52,20 @@
                         </div>
                     </div><!-- /.col -->
 
-
-
-
-
-
-
-
-
-
-
-                    <!--  <div class="col-md-7 col-xs-7">
-                        <div class="form-group">
-                            <label>Lançar Produtos</label>
-                            <select class="chosen-select" data-placeholder="Selecione o produto" name="produto" id="produto" style="width: 100%;">
-                                </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-xs-2">
-                        <div class="form-group">
-                            <label>Quantidade</label>
-                            <input type="text" name="qtd" id="qtd">
-                            
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-xs-2">
-                        <div class="form-group">
-                            <label>Valor</label>
-                            <input type="text" name="valor" id="valor">
-                            
-                        </div>
-                    </div>
-                    <div class="col-md-1">
-                            <div class="form-group">
-                                <label>Add</label>
-                                <button class="form-control btn btn-success btn-xs"  onclick="return GravarDadosOs()" name="btnAddItem"><i class="fa fa-edit"></i></button>
-                            </div>
-                        </div> -->
                     <div class="col-md-12 col-xs-12">
                         <hr>
 
 
                         <div id="div-produtos" style="display: none;">
-                            <h2>Lista de Produtos</h2>
+                        <h3 class="widget-title grey lighter">
+                            <i class="ace-icon fa fa-shopping-cart green"></i>
+                            Lista de produtos
+                        </h3>
+
                             <table id="tabela-produtos" class="table table-striped table-bordered table-hover">
 
                                 <thead>
-                                    <tr>
+                                    <tr class="list_prod">
                                         <th>Produto</th>
                                         <th>Estoque</th>
                                         <th>Valor</th>
@@ -117,7 +85,11 @@
 
 
                         <div id="div-servicos" style="display: none;">
-                            <h2>Lista de Serviços</h2>
+                        <h3 class="widget-title grey lighter">
+                            <i class="ace-icon fa fa-cogs green"></i>
+                            Lista de serviços
+                        </h3>
+
                             <table id="tabela-servicos" class="table table-striped table-bordered table-hover">
 
                                 <thead>
@@ -134,7 +106,10 @@
                         </div>
                     </div>
                     <div class="col-md-12 col-xs-12" id="div_listagem_itens_os" style="display:none">
-                        <h2>Produtos e serviços</h2>
+                    <h3 class="widget-title grey lighter">
+                            <i class="ace-icon fa fa-list green"></i>
+                            Produtos e serviços adicionados na ordem de serviço
+                        </h3>
                         <table id="tabela-itens_os" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>

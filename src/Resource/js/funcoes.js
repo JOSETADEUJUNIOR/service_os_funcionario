@@ -195,12 +195,28 @@ function ModalMais(data_atendimento, data_encerramento = "", tec_atendimento = "
     }
 }
 
-function CarregarDadosOS(id, data_abertura, numero_nf)
+function CarregarDadosOS(id, data_abertura, numero_nf, data_encerramento)
 {
+   
+    $("#status").val(data_encerramento); // quer dizer os em aberto 
     $("#nf").html("#"+ numero_nf);
     $("#OsID").val(id); 
+    if (data_encerramento!=0) {
+        alert('entrou');
+        $("#div_produto").hide();
+        $("#div_servico").hide();
+    }else if (data_encerramento==0) {
+        $("#div_produto").show();
+        $("#div_servico").show();
+    }
     $("#data_abertura").html(data_abertura); 
     CarregarProdutosOS(id);
     ListarProdutos();
     ListarServicos();
+}
+
+function printOs(id){
+
+
+    alert('teste');
 }

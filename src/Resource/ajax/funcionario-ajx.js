@@ -119,7 +119,7 @@ function AlterarMeusDados(id_form) {
                 if (resultado == 1) {
                     MensageGenerica('ola', 'warning');
                 } else {
-                    
+
                     MensagemErro();
                 }
             }
@@ -165,7 +165,7 @@ function AlterarMeusDados(id_form) {
  */
 
 function GravarDadosOs() {
-    
+
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
@@ -216,7 +216,7 @@ function GravarDadosOs() {
 
 function ModalAberto() {
     if ($("#dadosOS").is(":visible")) {
-             modal({
+        modal({
             backdrop: 'static',
             keyboard: false
         });
@@ -337,7 +337,7 @@ function ListarServicos() {
                 var colunaNome = $("<td></td>").text(servico.ServDescricao);
                 linha.append(colunaNome);
 
-               
+
                 // Coluna do valor do produto
                 var colunaValor = $("<td id=\"valor\"></td>");
                 var inputValor = $("<input class=\"form-control\" type='text' readonly>").attr("name", "valor[]").val(servico.ServValor);
@@ -345,15 +345,15 @@ function ListarServicos() {
                 linha.append(colunaValor);
 
                 // Coluna do checkbox
-               
-                    var colunaCheckbox = $("<td></td>");
-                    var checkbox = $("<input type='checkbox'>").attr("name", "servico_id[]").val(servico.ServID);
-                    colunaCheckbox.append(checkbox);
-                    linha.append(colunaCheckbox);
 
-                
+                var colunaCheckbox = $("<td></td>");
+                var checkbox = $("<input type='checkbox'>").attr("name", "servico_id[]").val(servico.ServID);
+                colunaCheckbox.append(checkbox);
+                linha.append(colunaCheckbox);
 
-                    tabelaServicos.append(linha);
+
+
+                tabelaServicos.append(linha);
             }
         }
     });
@@ -448,14 +448,14 @@ $("#btn-gravar-serv").click(function () {
     var servicosSelecionados = $("input[name='servico_id[]']:checked").each(function () {
         var row = $(this).closest("tr")[0];
         //var quantidade = $(row).find("input[name='quantidade[]']").val();
-       
-            Servicos.push({
-                "servico_id": $(row).find("input[name='servico_id[]']").val(),
-                "valor": $(row).find("input[name='valor[]']").val(),
-            });
-       
+
+        Servicos.push({
+            "servico_id": $(row).find("input[name='servico_id[]']").val(),
+            "valor": $(row).find("input[name='valor[]']").val(),
+        });
+
     });
-    
+
     if (Servicos.length === 0) {
         MensagemGenerica("Para gravar, adicione algum serviço", 'warning');
         return;
@@ -485,7 +485,7 @@ $("#btn-gravar-serv").click(function () {
                 MensagemGenerica("Serviço Adicionado com sucesso", 'success');
                 ListarServicos();
                 CarregarProdutosOS($("#OsID").val());
-                
+
 
             }
 
@@ -499,23 +499,22 @@ $("#btn-gravar-serv").click(function () {
 
 })
 
-function RemoveProdOS(ref_id, quantidade, produtoID)
-{
-    
-    
-    
+function RemoveProdOS(ref_id, quantidade, produtoID) {
+
+
+
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
     }
 
-   
+
     var empresa_func_id = dadosAPI.empresa_id;
     var referencia_func_id = ref_id;
     var qtd = quantidade;
     var prodID = produtoID;
     var dados = {
-        
+
         endpoint: "RemoveProdOsAPI",
         empresa_id: empresa_func_id,
         quantidade_produto: qtd,
@@ -533,35 +532,34 @@ function RemoveProdOS(ref_id, quantidade, produtoID)
         },
         success: function (dados_ret) {
             var resultado = dados_ret["result"];
-            
+
             if (resultado == 1) {
                 ListarProdutos();
                 CarregarProdutosOS($("#OsID").val());
                 MensagemGenerica('Produto removido com sucesso', 'success');
             } else {
-                     MensagemErro();
+                MensagemErro();
             }
         }
     })
 }
 
 
-function RemoveServOS(ref_id, servicoID)
-{
-    
-    
-    
+function RemoveServOS(ref_id, servicoID) {
+
+
+
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
     }
 
-   
+
     var empresa_func_id = dadosAPI.empresa_id;
     var referencia_func_id = ref_id;
     var servID = servicoID;
     var dados = {
-        
+
         endpoint: "RemoveServOsAPI",
         empresa_id: empresa_func_id,
         servico_id: servID,
@@ -578,14 +576,14 @@ function RemoveServOS(ref_id, servicoID)
         },
         success: function (dados_ret) {
             var resultado = dados_ret["result"];
-            
+
             if (resultado == 1) {
                 ListarServicos();
                 ListarProdutos();
                 CarregarProdutosOS($("#OsID").val());
                 MensagemGenerica('Serviço removido com sucesso', 'success');
             } else {
-                     MensagemErro();
+                MensagemErro();
             }
         }
     })
@@ -678,7 +676,7 @@ function AbrirChamado(id_form) {
 }
 
 function CarregarProdutosOS(id) {
-    
+
     var dadosAPI = GetTnkValue();
     if (!dadosAPI.funcionario_id) {
         Sair();
@@ -707,79 +705,96 @@ function CarregarProdutosOS(id) {
 }
 
 function preencherTabelaItens(itens) {
-    
-    if (itens !="") {
-        
-    $("#div_listagem_itens_os").show();
-    var tabelaItens_os = $("#tabela-itens_os tbody");
-    tabelaItens_os.empty(); // Limpa as linhas anteriores da tabela
+console.log(itens);
+    if (itens != "") {
 
-    var totalGeral = 0; // Inicializa o total geral como 0
+        $("#div_listagem_itens_os").show();
+        var tabelaItens_os = $("#tabela-itens_os tbody");
+        tabelaItens_os.empty(); // Limpa as linhas anteriores da tabela
 
-    for (var i = 0; i < itens.length; i++) {
-        var item = itens[i];
-        var linha_os = $("<tr></tr>");
+        var totalGeral = 0; // Inicializa o total geral como 0
+        var valorTotal;
+        for (var i = 0; i < itens.length; i++) {
+            var item = itens[i];
+            var linha_os = $("<tr></tr>");
 
-        // Verifica se é um produto ou serviço
-        var tipoItem = item.ProdDescricao ? "Produto" : "Serviço";
-        var colunaTipo_os = $("<td></td>").text(tipoItem);
+            // Verifica se é um produto ou serviço
+            var tipoItem = item.ProdDescricao ? "Produto" : "Serviço";
+            var colunaTipo_os = $("<td></td>").text(tipoItem);
 
-        if (item.ProdDescricao) {
-            // É um produto
-            var colunaDescricao_os = $("<td></td>").text(item.ProdDescricao);
-            var colunaQuantidade_os = $("<td></td>").text(item.quantidade);
-            var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
-            var valorTotal = item.quantidade * item.valor;
-            var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
-            var botaoExcluir = $("<button class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
-            botaoExcluir.attr("data-referencia-id", item.referencia_id);
-            botaoExcluir.attr("data-produto-id", item.produto_ProdID);
+            if (item.ProdDescricao) {
+                // É um produto
+                var colunaDescricao_os = $("<td></td>").text(item.ProdDescricao);
+                var colunaQuantidade_os_prod = $("<td></td>").text(item.quantidade);
+                var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
+                var valorTotal = item.quantidade * item.valor;
+                var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
+                var botaoExcluir = $("<button class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
+                botaoExcluir.attr("data-referencia-id", item.referencia_id);
+                botaoExcluir.attr("data-produto-id", item.produto_ProdID);
+                botaoExcluir.attr("data-quantidade", item.quantidade);
+                
+                botaoExcluir.click(function () {
+                    if ($("#status").val()==0) {
+                    var referenciaId = $(this).attr("data-referencia-id");
+                    var produtoId = $(this).attr("data-produto-id");
+                    var quantidade = $(this).attr("data-quantidade");
+                    
+                    RemoveProdOS(referenciaId, quantidade, produtoId);
+                    }else{
+                        MensagemGenerica("Ordem de serviço concluída, exclusão não permitida", "warning");
+                    }
+                });
 
-            botaoExcluir.click(function () {
-                var referenciaId = $(this).attr("data-referencia-id");
-                var produtoId = $(this).attr("data-produto-id");
-                var quantidade = item.quantidade;
-                RemoveProdOS(referenciaId, quantidade, produtoId);
-            });
+                var colunaExcluir = $("<td></td>").append(botaoExcluir);
 
-            var colunaExcluir = $("<td></td>").append(botaoExcluir);
+                linha_os.append(colunaDescricao_os, colunaTipo_os, colunaQuantidade_os_prod, colunaValorUnitario_os, colunaValorTotal, colunaExcluir);
+            } else {
+                // É um serviço
+                var quantidadeServico;
+                if (item.quantidade > 1) {
+                    quantidadeServico = item.quantidade;
+                } else {
+                    quantidadeServico = 1;
+                }
+                var colunaDescricao_os = $("<td></td>").text(item.ServNome);
+                var colunaQuantidade_os = $("<td></td>").text(quantidadeServico);
+                var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
+                var valorTotal = 1 * item.valor;
+                var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
+               
+                var botaoExcluir = $("<button class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
+                botaoExcluir.attr("data-referencia-id", item.referencia_id);
+                botaoExcluir.attr("data-servico-id", item.servico_ProdID);
 
-            linha_os.append(colunaDescricao_os, colunaTipo_os, colunaQuantidade_os, colunaValorUnitario_os, colunaValorTotal, colunaExcluir);
-        } else {
-            // É um serviço
-            var colunaDescricao_os = $("<td></td>").text(item.ServNome);
-            var colunaQuantidade_os = $("<td></td>").text('1');
-            var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
-            var valorTotal = 1 * item.valor;
-            var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
-            var botaoExcluir = $("<button class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
-            botaoExcluir.attr("data-referencia-id", item.referencia_id);
-            botaoExcluir.attr("data-servico-id", item.servico_ProdID);
+                botaoExcluir.click(function () {
+                    if ($("#status").val()==0) {
+                        var referenciaId = $(this).attr("data-referencia-id");
+                        var servicoId = $(this).attr("data-servico-id");
+                        RemoveServOS(referenciaId, servicoId);
+                    }else{
+                        MensagemGenerica("Ordem de serviço concluída, exclusão não permitida", "warning");
+                    }
+                });
 
-            botaoExcluir.click(function () {
-                var referenciaId = $(this).attr("data-referencia-id");
-                var servicoId = $(this).attr("data-servico-id");
-                RemoveServOS(referenciaId, servicoId);
-            });
+                var colunaExcluir = $("<td></td>").append(botaoExcluir);
 
-            var colunaExcluir = $("<td></td>").append(botaoExcluir);
+                linha_os.append(colunaDescricao_os, colunaTipo_os, colunaQuantidade_os, colunaValorUnitario_os, colunaValorTotal, colunaExcluir);
+            }
 
-            linha_os.append(colunaDescricao_os, colunaTipo_os, colunaQuantidade_os, colunaValorUnitario_os, colunaValorTotal, colunaExcluir);
+            tabelaItens_os.append(linha_os);
+            totalGeral += valorTotal;
         }
 
-        tabelaItens_os.append(linha_os);
-        totalGeral += valorTotal;
+        // Adicionar a linha do total geral abaixo da tabela
+        var linhaTotalGeral = $("<tr style=\"background-color:#ddd\"></tr>");
+        var colunaTotalGeral = $("<td></td>").attr("colspan", "5").text("Total Geral:");
+        var colunaValorTotalGeral = $("<td></td>").text(formatarValorEmReais(totalGeral));
+        linhaTotalGeral.append(colunaTotalGeral, colunaValorTotalGeral);
+        tabelaItens_os.append(linhaTotalGeral);
+    } else {
+        $("#div_listagem_itens_os").hide();
     }
-
-    // Adicionar a linha do total geral abaixo da tabela
-    var linhaTotalGeral = $("<tr style=\"background-color:#ddd\"></tr>");
-    var colunaTotalGeral = $("<td></td>").attr("colspan", "5").text("Total Geral:");
-    var colunaValorTotalGeral = $("<td></td>").text(formatarValorEmReais(totalGeral));
-    linhaTotalGeral.append(colunaTotalGeral, colunaValorTotalGeral);
-    tabelaItens_os.append(linhaTotalGeral);
-}else{
-    $("#div_listagem_itens_os").hide();
-}
 }
 
 function formatarValorEmReais(valor) {
@@ -822,13 +837,13 @@ function FiltrarChamado(situacao = 4) {
             if (resultado) {
                 var table_data = resultado.map(function (item) {
 
-                if (item.data_abertura!=null && item.data_atendimento == null) {
-                    status = '<span class="label label-info arrowed-right arrowed-in">Em aberto</span>';
-                }else if (item.data_atendimento != null && item.tecnico_encerramento == null ) {
-                    status = '<span class="label label-warning arrowed arrowed-right">Em atendimento</span>';
-                } else if (item.tecnico_encerramento != null ) {
-                    status = '<span class="label label-success arrowed-in arrowed-in-right">Concluída</span>';
-                }
+                    if (item.data_abertura != null && item.data_atendimento == null) {
+                        status = '<span class="label label-info arrowed-right arrowed-in">Em aberto</span>';
+                    } else if (item.data_atendimento != null && item.tecnico_encerramento == null) {
+                        status = '<span class="label label-warning arrowed arrowed-right">Em atendimento</span>';
+                    } else if (item.tecnico_encerramento != null) {
+                        status = '<span class="label label-success arrowed-in arrowed-in-right">Concluída</span>';
+                    }
                     return `
               <tr>
                 <td colspan="3">
@@ -836,14 +851,19 @@ function FiltrarChamado(situacao = 4) {
                     <a class="green" href="#verMais" role="button" data-toggle="modal" onclick="ModalMais('${item.data_atendimento || ""}', '${item.data_encerramento || ""}', '${item.nome_tecnico || ""}', '${item.tecnico_encerramento || ""}', '${item.defeito || ""}', '${item.observacao || ""}', '${item.numero_nf}', '${item.laudo_tecnico || "sem laudo"}')">
                         <i title="Alterar Setor" class="ace-icon fa fa-pencil bigger-120"></i>
                     </a>
-                    <a class="green" href="#dadosOS" role="button" data-toggle="modal" onclick="CarregarDadosOS('${item.id}', '${item.data_abertura}', '${item.numero_nf}')">
+                    <a class="blue" href="#print_os" role="button" data-toggle="modal" onclick="printOs('${item.id}')">
+                        <i title="Alterar Setor" class="ace-icon fa fa-print bigger-120"></i>
+                    </a>
+                </td>
+                <td colspan="3">
+                <a class="green" href="#dadosOS" role="button" data-toggle="modal" onclick="CarregarDadosOS('${item.id}', '${item.data_abertura}', '${item.numero_nf}', ${item.data_encerramento !== null ? "'" + item.data_encerramento + "'" : 0})">
+
                         <i title="Itens da os" class="ace-icon fa fa-list bigger-120"></i>
                     </a>
-                   
+                    </td>
   
   
                 
-                </td>
                 <td>${item.numero_nf}</td>
                 <td>${item.data_abertura}</td>
                 <td>${item.nome_funcionario}</td>
@@ -858,6 +878,7 @@ function FiltrarChamado(situacao = 4) {
               <thead>
                 <tr>
                   <th colspan="3">Ações</th>
+                  <th colspan="3">Itens</th>
                   <th>Numero da NF</th>
                   <th>Data Abertura</th>
                   <th>Funcionário</th>
