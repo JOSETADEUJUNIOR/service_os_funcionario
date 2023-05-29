@@ -22,6 +22,7 @@ function CarregarMeusDados() {
         },
         success: function (dados_ret) {
             var resultado = dados_ret["result"];
+            console.log(resultado);
             $("#nome").val(resultado.nome);
             $("#setor").val(resultado.nome_setor)
             $("#email").val(resultado.login);
@@ -705,7 +706,7 @@ function CarregarProdutosOS(id) {
 }
 
 function preencherTabelaItens(itens) {
-console.log(itens);
+    console.log(itens);
     if (itens != "") {
 
         $("#div_listagem_itens_os").show();
@@ -733,15 +734,15 @@ console.log(itens);
                 botaoExcluir.attr("data-referencia-id", item.referencia_id);
                 botaoExcluir.attr("data-produto-id", item.produto_ProdID);
                 botaoExcluir.attr("data-quantidade", item.quantidade);
-                
+
                 botaoExcluir.click(function () {
-                    if ($("#status").val()==0) {
-                    var referenciaId = $(this).attr("data-referencia-id");
-                    var produtoId = $(this).attr("data-produto-id");
-                    var quantidade = $(this).attr("data-quantidade");
-                    
-                    RemoveProdOS(referenciaId, quantidade, produtoId);
-                    }else{
+                    if ($("#status").val() == 0) {
+                        var referenciaId = $(this).attr("data-referencia-id");
+                        var produtoId = $(this).attr("data-produto-id");
+                        var quantidade = $(this).attr("data-quantidade");
+
+                        RemoveProdOS(referenciaId, quantidade, produtoId);
+                    } else {
                         MensagemGenerica("Ordem de serviço concluída, exclusão não permitida", "warning");
                     }
                 });
@@ -762,17 +763,17 @@ console.log(itens);
                 var colunaValorUnitario_os = $("<td></td>").text(formatarValorEmReais(item.valor));
                 var valorTotal = 1 * item.valor;
                 var colunaValorTotal = $("<td></td>").text(formatarValorEmReais(valorTotal));
-               
+
                 var botaoExcluir = $("<button class=\"red\"><i title=\"Excluir\" class=\"ace-icon fa fa-trash-o bigger-120\"></i></button>");
                 botaoExcluir.attr("data-referencia-id", item.referencia_id);
                 botaoExcluir.attr("data-servico-id", item.servico_ProdID);
 
                 botaoExcluir.click(function () {
-                    if ($("#status").val()==0) {
+                    if ($("#status").val() == 0) {
                         var referenciaId = $(this).attr("data-referencia-id");
                         var servicoId = $(this).attr("data-servico-id");
                         RemoveServOS(referenciaId, servicoId);
-                    }else{
+                    } else {
                         MensagemGenerica("Ordem de serviço concluída, exclusão não permitida", "warning");
                     }
                 });
@@ -837,6 +838,7 @@ function FiltrarChamado(situacao = 4) {
             if (resultado) {
                 var table_data = resultado.map(function (item) {
 
+
                     if (item.data_abertura != null && item.data_atendimento == null) {
                         status = '<span class="label label-info arrowed-right arrowed-in">Em aberto</span>';
                     } else if (item.data_atendimento != null && item.tecnico_encerramento == null) {
@@ -851,8 +853,8 @@ function FiltrarChamado(situacao = 4) {
                     <a class="green" href="#verMais" role="button" data-toggle="modal" onclick="ModalMais('${item.data_atendimento || ""}', '${item.data_encerramento || ""}', '${item.nome_tecnico || ""}', '${item.tecnico_encerramento || ""}', '${item.defeito || ""}', '${item.observacao || ""}', '${item.numero_nf}', '${item.laudo_tecnico || "sem laudo"}')">
                         <i title="Alterar Setor" class="ace-icon fa fa-pencil bigger-120"></i>
                     </a>
-                    <a class="blue" href="#print_os" role="button" data-toggle="modal" onclick="printOs('${item.id}')">
-                        <i title="Alterar Setor" class="ace-icon fa fa-print bigger-120"></i>
+                    <a class="blue" href="#print_os" role="button" data-toggle="modal" onclick="RelatorioOs('${item.id}', '${item.numero_nf}', '${item.cliente_id}')">
+                        <i title="Emitir Ordem" class="ace-icon fa fa-print bigger-120"></i>
                     </a>
                 </td>
                 <td colspan="3">
@@ -871,6 +873,7 @@ function FiltrarChamado(situacao = 4) {
                 <td>${status}</td>
                 <td>${item.descricao_problema}</td>
               </tr>`;
+
                 }).join('');
 
                 var vaso = `
@@ -1072,3 +1075,199 @@ function VerSenha() {
 
 
 }
+
+
+
+function RelatorioOs(id, numero_nf, cliente_CliID) {
+
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id) {
+        Sair();
+    }
+
+    var dados = {
+        endpoint: 'CarregarProdServOS',
+        chamado_id: id,
+    };
+    $.ajax({
+        type: "POST",
+        url: BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (dados_ret) {
+            var data = dados_ret['result'];
+            console.log(data);
+            var tableBody = $('#table_rel_os'); // Seletor para o corpo da tabela
+            var count = 1;
+            var totalGeral = 0;
+            // Limpar o conteúdo atual da tabela
+            tableBody.empty();
+
+            // Iterar sobre os dados e gerar as linhas da tabela
+            $.each(data, function (index, item) {
+                var row = $('<tr>'); // Cria uma nova linha da tabela
+
+                // Verifica se é um produto ou serviço
+                var isProduct = item.ProdDescricao !== null;
+                var description = isProduct ? item.ProdDescricao : item.ServDescricao;
+
+                // Cria as células da tabela com os dados correspondentes
+                var cell1 = $('<td>').addClass('center').text(count++);
+                var cell2 = $('<td>').text(isProduct ? 'Produto' : 'Serviço');
+                var cell3 = $('<td>').addClass('hidden-xs').text(description);
+                var cell4 = $('<td>').addClass('hidden-xs').text(item.quantidade);
+                var cell5 = $('<td>').addClass('hidden-xs').text(item.valor);
+                //var cell6 = $('<td>').addClass('hidden-480').text(item.discount);
+                var cell6 = $('<td>').text(item.valorTotal);
+                var valorTotal = parseFloat(item.valorTotal);
+                totalGeral += valorTotal;
+
+                // Adiciona as células à linha da tabela
+                row.append(cell1, cell2, cell3, cell4, cell5, cell6);
+
+                // Adiciona a linha à tabela
+                tableBody.append(row);
+            });
+            $("#total_geral").html(formatarValorEmReais(totalGeral));
+            $("#numero_nf_rel").html(numero_nf);
+            var dataAtual = new Date();
+            var dataFormatada = dataAtual.toLocaleDateString();
+            $("#data_fatura").text(dataFormatada);
+            RetornaCliente(cliente_CliID);
+            RetornaEmpresa();
+            RetornarDadosRelOs(id);
+        }
+    });
+
+    return false;
+}
+
+function RetornaCliente(idCliente) {
+
+
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id) {
+        Sair();
+    }
+    var id_setor_func = dadosAPI.setor_id;
+
+    var endpoint_clientes = "DetalharClienteOS";
+    var dados = {
+        tipo: dadosAPI.tipo,
+        empresa_id: dadosAPI.empresa_id,
+        endpoint: endpoint_clientes,
+        id_setor: id_setor_func,
+        cliente_id: idCliente
+    }
+    $.ajax({
+        type: "POST",
+        url: BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (dados_ret) {
+            var resultado = dados_ret["result"];
+            console.log(resultado);
+            $("#cliente_nome").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>Nome: " + resultado.CliNome);
+            $("#cliente_endereco").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>Endereco: " + resultado.CliEndereco);
+            $("#cliente_cep").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>Cep: " + resultado.CliCep);
+            $("#cliente_estado").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>Cidade: " + resultado.CliCidade + " - " + resultado.CliEstado);
+            $("#cliente_email").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>E-mail: " + resultado.CliEmail);
+
+
+
+        }
+    })
+    return false;
+
+
+}
+
+function RetornarDadosRelOs(idOs) {
+
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id) {
+        Sair();
+    }
+    alert(idOs);
+    var id_setor_func = dadosAPI.setor_id;
+
+    var endpoint_clientes = "DetalharDadosOS";
+    var dados = {
+        tipo: dadosAPI.tipo,
+        empresa_id: dadosAPI.empresa_id,
+        endpoint: endpoint_clientes,
+        os_id: idOs
+
+    }
+    $.ajax({
+        type: "POST",
+        url: BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (dados_ret) {
+            var resultado = dados_ret["result"];
+            console.log(resultado);
+            $("#os_descricao").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>" + resultado.descricao_problema);
+            $("#os_defeito").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>" + resultado.defeito);
+            $("#os_observacao").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>" + resultado.observacao);
+            $("#os_laudo_tec").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>" + resultado.laudo_tecnico);
+
+        }
+    })
+    return false;
+
+
+}
+
+function RetornaEmpresa() {
+
+    var dadosAPI = GetTnkValue();
+    if (!dadosAPI.funcionario_id) {
+        Sair();
+    }
+    var id_setor_func = dadosAPI.setor_id;
+
+    var endpoint_clientes = "DetalharEmpresaOS";
+    var dados = {
+        tipo: dadosAPI.tipo,
+        empresa_id: dadosAPI.empresa_id,
+        endpoint: endpoint_clientes,
+        id_setor: id_setor_func,
+        cliente_id: idCliente
+    }
+    $.ajax({
+        type: "POST",
+        url: BASE_URL_AJAX("funcionario_api"),
+        data: JSON.stringify(dados),
+        headers: {
+            'Authorization': 'Bearer ' + GetTnk(),
+            'Content-Type': 'application/json'
+        },
+        success: function (dados_ret) {
+            var resultado = dados_ret["result"];
+            console.log(resultado);
+            $("#empresa_cnpj").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>Cnpj: " + resultado.EmpCNPJ);
+            $("#empresa_nome").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>Nome: " + resultado.EmpNome);
+            $("#empresa_endereco").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>Endereco: " + resultado.EmpEnd);
+            $("#empresa_cep").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>Cep: " + resultado.EmpCep);
+            $("#empresa_cidade").html("<i class=\"ace-icon fa fa-caret-right blue\"></i>Cidade: " + resultado.EmpCidade);
+
+
+
+        }
+    })
+    return false;
+
+
+}
+
+

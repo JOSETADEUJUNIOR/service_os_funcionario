@@ -8,8 +8,16 @@
 
 	<meta name="description" content="Static &amp; Dynamic Tables" />
 
+
+
 	<style>
 		/* Estilização da tabela */
+		@media print {
+			.modal-header .close {
+				display: none;
+			}
+		}
+
 		table {
 			width: 100%;
 			border-collapse: collapse;
@@ -35,12 +43,13 @@
 		input[type="checkbox"] {
 			transform: scale(1.5);
 		}
-		
-		.list_prod{
+
+		.list_prod {
 			background-image: red;
 		}
-	</style>
 
+		/* Estilos gerais */
+	</style>
 
 </head>
 
@@ -134,6 +143,11 @@
 	<?php include_once PATH_URL . './Template/_includes/_scripts.php' ?>
 	<script src="../Resource/js/mensagem.js"></script>
 	<script src="../Resource/ajax/funcionario-ajx.js"></script>
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<!-- Biblioteca printThis -->
+	<script src="https://cdn.jsdelivr.net/npm/print-this@1.15.0/printThis.min.js"></script>
 	<script>
 		Verify();
 		//console.log(Verify());
@@ -153,6 +167,10 @@
 		$("#btn-toggle-div-serv").click(function() {
 			$("#div-servicos").toggle();
 		});
+
+
+
+		// Abrir o modal e adicionar a classe CSS ao conteúdo do modal
 	</script>
 
 

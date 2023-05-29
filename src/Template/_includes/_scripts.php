@@ -28,3 +28,4 @@
 <!-- ace scripts -->
 <script src="../Template/assets/js/ace-elements.min.js"></script>
 <script src="../Template/assets/js/ace.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>

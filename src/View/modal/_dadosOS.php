@@ -57,10 +57,10 @@
 
 
                         <div id="div-produtos" style="display: none;">
-                        <h3 class="widget-title grey lighter">
-                            <i class="ace-icon fa fa-shopping-cart green"></i>
-                            Lista de produtos
-                        </h3>
+                            <h3 class="widget-title grey lighter">
+                                <i class="ace-icon fa fa-shopping-cart green"></i>
+                                Lista de produtos
+                            </h3>
 
                             <table id="tabela-produtos" class="table table-striped table-bordered table-hover">
 
@@ -81,14 +81,14 @@
                     </div>
 
                     <div class="col-md-12 col-xs-12">
-                       
+
 
 
                         <div id="div-servicos" style="display: none;">
-                        <h3 class="widget-title grey lighter">
-                            <i class="ace-icon fa fa-cogs green"></i>
-                            Lista de serviços
-                        </h3>
+                            <h3 class="widget-title grey lighter">
+                                <i class="ace-icon fa fa-cogs green"></i>
+                                Lista de serviços
+                            </h3>
 
                             <table id="tabela-servicos" class="table table-striped table-bordered table-hover">
 
@@ -106,32 +106,33 @@
                         </div>
                     </div>
                     <div class="col-md-12 col-xs-12" id="div_listagem_itens_os" style="display:none">
-                    <h3 class="widget-title grey lighter">
+                        <h3 class="widget-title grey lighter">
                             <i class="ace-icon fa fa-list green"></i>
                             Produtos e serviços adicionados na ordem de serviço
                         </h3>
-                        <table id="tabela-itens_os" class="table table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Descrição</th>
-                                    <th>Tipo</th>
-                                    <th>Quantidade</th>
-                                    <th>Valor Unitário</th>
-                                    <th>Valor Total</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- As linhas dos itens serão adicionadas aqui dinamicamente -->
-                            </tbody>
-                           <!--  <tfoot>
+                        <div class="table-responsive">
+                            <table id="tabela-itens_os" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Descrição</th>
+                                        <th>Tipo</th>
+                                        <th>Quantidade</th>
+                                        <th>Valor Unitário</th>
+                                        <th>Valor Total</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- As linhas dos itens serão adicionadas aqui dinamicamente -->
+                                </tbody>
+                                <!--  <tfoot>
                                 <tr style="background-color:#ddd">
                                     <td colspan="5">Total Geral:</td>
                                     <td></td>
                                 </tr>
                             </tfoot> -->
-                        </table>
-
+                            </table>
+                        </div>
                     </div>
                 </div>
 
