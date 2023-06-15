@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="../Template/assets/css/ace-skins.min.css" />
   <link rel="stylesheet" href="../Template/assets/css/ace-rtl.min.css" />
   <link rel="stylesheet" href="../Template/assets/css/estilo.css">
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
 
 
 </head>
